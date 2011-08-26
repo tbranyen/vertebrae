@@ -15,8 +15,12 @@ jQuery.mock = function(routes) {
   });
 };
 
+jQuery.mock.404delay = 100;
+
 // Testing out an ajax transport
 $.ajaxTransport('+*', function(options, originalOptions, jqXHR) {
+  var timeout;
+
   return {
     send: function(headers, completeCallback) {
 
@@ -37,16 +41,19 @@ $.ajaxTransport('+*', function(options, originalOptions, jqXHR) {
 
       // If no matches, run regular AJAX
       if (!route) {
-        completeCallback(404, 'error');
+        timeout = window.setTimeout(function() {
+          completeCallback(404, 'error');
+        }, jQuery.mock.404delay);
       }
 
       // Simulate a longer request
-      window.setTimeout(function() {
+      timeout = window.setTimeout(function() {
         completeCallback(200, 'success', { responseText: route.data });
       }, route.timeout);
     },
+
     abort: function() {
-      /* abort code */
+      window.clearTimeout(timeout);
     }
   };
 });

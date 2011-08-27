@@ -46,6 +46,9 @@ $.ajaxTransport('+*', function(options, originalOptions, jqXHR) {
         timeout = window.setTimeout(function() {
           completeCallback(404, 'error');
         }, jQuery.mock.delay['404']);
+
+        // Ensure the success is not run
+        return;
       }
 
       // Simulate a longer request

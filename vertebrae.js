@@ -15,7 +15,9 @@ jQuery.mock = function(routes) {
   });
 };
 
-jQuery.mock.404delay = 100;
+jQuery.mock.delay = {
+  '404': 100
+};
 
 // Testing out an ajax transport
 $.ajaxTransport('+*', function(options, originalOptions, jqXHR) {
@@ -43,7 +45,7 @@ $.ajaxTransport('+*', function(options, originalOptions, jqXHR) {
       if (!route) {
         timeout = window.setTimeout(function() {
           completeCallback(404, 'error');
-        }, jQuery.mock.404delay);
+        }, jQuery.mock.delay['404']);
       }
 
       // Simulate a longer request

@@ -53,7 +53,10 @@ $.ajaxTransport('+*', function(options, originalOptions, jqXHR) {
 
       // Simulate a longer request
       timeout = window.setTimeout(function() {
-        completeCallback(200, 'success', { responseText: route.data });
+        var data = typeof route.data === 'function'
+          ? route.data.apply(this, captures.slice(1)) : route.data;
+
+        completeCallback(200, 'success', { responseText: data });
       }, route.timeout);
     },
 

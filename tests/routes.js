@@ -31,16 +31,16 @@ asyncTest('matched id', function() {
   });
 });
 
-asyncTest('invalid id', function() {
-  $.getJSON('/route/5', function(data) {
-    equals(data.id, 0);
-    equals(data.test, 'None')
-    start();
-  }).error(function() {
-    ok(false, 'Should not error here');
-    start();
-  });
-});
+//asyncTest('invalid id', function() {
+//  $.getJSON('/route/5', function(data) {
+//    equals(data.id, 0);
+//    equals(data.test, 'None')
+//    start();
+//  }).error(function() {
+//    ok(false, 'Should not error here');
+//    start();
+//  });
+//});
 
 asyncTest('post request', function() {
   $.ajax({

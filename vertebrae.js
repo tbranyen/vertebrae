@@ -27,23 +27,22 @@ $.ajaxTransport('+*', function(options, originalOptions, jqXHR) {
 
   return {
     send: function(headers, completeCallback) {
-
       // Look for captures
       var captures, route;
 
       // If match is found bail
-      _.each(_routes, function(opts, url) {
+      _.detect(_routes, function(opts, url) {
         captures = opts.regex.exec(options.url);
 
         // Capture has been found, ensure its the correct type
-        console.log(captures, _routes[url], options.type.toLowerCase());
         if (captures && _routes[url].method === options.type.toLowerCase()) {
           route = _routes[url];
-          return false;
+
+          return true;
         }
       });
 
-      // If no matches, run regular AJAX
+      // If no matches, trigger 404 with delay
       if (!route) {
         timeout = window.setTimeout(function() {
           completeCallback(404, 'error');
@@ -55,9 +54,8 @@ $.ajaxTransport('+*', function(options, originalOptions, jqXHR) {
 
       // Simulate a longer request
       timeout = window.setTimeout(function() {
-        console.log(captures);
         var data = typeof route.data === 'function'
-          ? route.data.apply(this, captures && captures.slice(1)) : route.data;
+          ? route.data.apply(null, captures && captures.slice(1)) : route.data;
 
         completeCallback(200, 'success', { responseText: data });
       }, route.timeout);

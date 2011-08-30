@@ -1,4 +1,5 @@
 var _routes = {};
+
 jQuery.mock = function(routes) {
   // Shorten reference
   var routeToRegExp = Backbone.Router.prototype._routeToRegExp;
@@ -9,6 +10,7 @@ jQuery.mock = function(routes) {
 
     // Set defaults
     route.regex = routeToRegExp(key);
+    route.method = (route.method || 'get').toLowerCase();
     route.timeout = route.timeout || 0;
     route.textStatus = route.textStatus || 'success';
     route.data = route.data || {};
@@ -33,10 +35,10 @@ $.ajaxTransport('+*', function(options, originalOptions, jqXHR) {
       _.each(_routes, function(opts, url) {
         captures = opts.regex.exec(options.url);
 
-        // Capture has been found, bail out
-        if (captures) {
+        // Capture has been found, ensure its the correct type
+        console.log(captures, _routes[url], options.type.toLowerCase());
+        if (captures && _routes[url].method === options.type.toLowerCase()) {
           route = _routes[url];
-
           return false;
         }
       });
@@ -53,8 +55,9 @@ $.ajaxTransport('+*', function(options, originalOptions, jqXHR) {
 
       // Simulate a longer request
       timeout = window.setTimeout(function() {
+        console.log(captures);
         var data = typeof route.data === 'function'
-          ? route.data.apply(this, captures.slice(1)) : route.data;
+          ? route.data.apply(this, captures && captures.slice(1)) : route.data;
 
         completeCallback(200, 'success', { responseText: data });
       }, route.timeout);

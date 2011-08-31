@@ -7,15 +7,12 @@
  */
 (function(window) {
 
+var defaults;
+
 // Third-party hard dependencies
 var _ = window._;
 var Backbone = window.Backbone;
 var jQuery = window.jQuery;
-
-// Throw error if missing any dependencies
-if (!_ || !Backbone || !jQuery) {
-  throw new Error("Unable to use vertebrae.js missing dependencies.");
-}
 
 // Cache internally all future defined routes
 var _routes = {};
@@ -39,7 +36,7 @@ jQuery.mock = function(routes) {
 };
 
 // Plugin defaults, can be overwritten
-var defaults = jQuery.mock.options = {
+defaults = jQuery.mock.options = {
   delay: {
     // Set 404 timeout to simulate real-world delay
     '404': 100
@@ -54,7 +51,7 @@ $.ajaxTransport('+*', function(options, originalOptions, jqXHR) {
   var timeout, captures, match, route;
   var method = options.type.toUpperCase();
 
-  // Per the documentation a transport should return a function
+  // Per the documentation a transport should return an object
   // with two keys: send and abort.
   //
   // send: Passes the currently requested route through the routes

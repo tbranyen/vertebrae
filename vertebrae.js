@@ -1,68 +1,106 @@
+/* vertebrae.js
+ *
+ * jQuery Plugin to mock AJAX requests for Backbone applications.
+ * Written By: Tim Branyen @tbranyen
+ *
+ * Licensed under whatever.
+ */
+(function(window) {
+
+// Third-party hard dependencies
+var _ = window._;
+var Backbone = window.Backbone;
+var jQuery = window.jQuery;
+
+// Throw error if missing any dependencies
+if (!_ || !Backbone || !jQuery) {
+  throw new Error("Unable to use vertebrae.js missing dependencies.");
+}
+
+// Cache internally all future defined routes
 var _routes = {};
 
+// Assign directly onto jQuery to be indicative this is indeed
+// a plugin and requires jQuery to use.
 jQuery.mock = function(routes) {
-  // Shorten reference
+  var route;
+  // Shorten Backbone regexp reference
   var routeToRegExp = Backbone.Router.prototype._routeToRegExp;
 
-  // Convert all URLs passed to regex
+  // Convert all URLs passed to regex and assign defaults if they
+  // are not provided.
   _.each(routes, function(val, key) {
-    var route = _routes[key] = val;
+    route = _routes[key] = val;
 
-    // Set defaults
     route.regex = routeToRegExp(key);
-    route.method = (route.method || 'get').toLowerCase();
     route.timeout = route.timeout || 0;
-    route.textStatus = route.textStatus || 'success';
-    route.data = route.data || {};
+    route.statusCode = isNaN(route.statusCode) ? 200 : route.statusCode;
   });
 };
 
-jQuery.mock.delay = {
-  '404': 100
+// Plugin defaults, can be overwritten
+var defaults = jQuery.mock.options = {
+  delay: {
+    // Set 404 timeout to simulate real-world delay
+    '404': 100
+  }
 };
 
-// Testing out an ajax transport
+// Adding transports in jQuery will push them to the end of the stack for
+// filtering.  Without the + preceding the wildcard *, most requests would
+// still be handled by jQuery's internal transports.  With the +, this
+// catch-all transport is bumped to the front and hijacks *ALL* requests.
 $.ajaxTransport('+*', function(options, originalOptions, jqXHR) {
-  var timeout;
+  var timeout, captures, match, route;
+  var method = options.type.toUpperCase();
 
+  // Per the documentation a transport should return a function
+  // with two keys: send and abort.
+  //
+  // send: Passes the currently requested route through the routes
+  // object and attempts to find a match.  
   return {
     send: function(headers, completeCallback) {
-      // Look for captures
-      var captures, route;
+      // Use the underscore detect method to check if a route is found
+      // match will either be undefined (falsy) or true (truthy).
+      match = _.detect(_routes, function(val, key) {
+        captures = val.regex.exec(options.url);
+        route = _routes[key];
 
-      // If match is found bail
-      _.detect(_routes, function(opts, url) {
-        captures = opts.regex.exec(options.url);
-
-        // Capture has been found, ensure its the correct type
-        if (captures && _routes[url].method === options.type.toLowerCase()) {
-          route = _routes[url];
-
+        // Capture has been found, ensure the requested type has a handler
+        if (captures && route[method]) {
           return true;
         }
       });
 
       // If no matches, trigger 404 with delay
-      if (!route) {
-        timeout = window.setTimeout(function() {
+      if (!match) {
+        // Return to ensure that the successful handler is never run
+        return timeout = window.setTimeout(function() {
           completeCallback(404, 'error');
-        }, jQuery.mock.delay['404']);
-
-        // Ensure the success is not run
-        return;
+        }, defaults.delay['404']);
       }
 
-      // Simulate a longer request
-      timeout = window.setTimeout(function() {
-        var data = typeof route.data === 'function'
-          ? route.data.apply(null, captures && captures.slice(1)) : route.data;
+      // Ensure captures is an array and not null
+      captures = captures || [];
 
-        completeCallback(200, 'success', { responseText: data });
+      // A timeout is useful for testing behavior that may require an abort
+      // or simulating how slow requests will show up to an end user.
+      timeout = window.setTimeout(function() {
+        completeCallback(route.statusCode, 'success', {
+          // Slice off the path from captures, only want to send the
+          // arguments.
+          responseText: route[method].apply(null, captures.slice(1))
+        });
       }, route.timeout);
     },
 
+    // This method will cancel any pending "request", by clearing the timeout
+    // that is responsible for triggering the success callback.
     abort: function() {
       window.clearTimeout(timeout);
     }
   };
 });
+
+})(this);

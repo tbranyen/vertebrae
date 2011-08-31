@@ -2,13 +2,16 @@
 $.mock({
 
   '/basic': {
-    timeout: 0,
-    data: 'Hello World'
+    GET: function() {
+      return 'Hello World';
+    }
   },
 
   '/timeout': {
     timeout: 1000,
-    data: 'Hello World, Later'
+    GET: function() {
+      return 'Hello World, Later';
+    }
   }
 
 });

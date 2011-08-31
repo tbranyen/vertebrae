@@ -2,13 +2,15 @@
 $.mock({
 
   '/valid.json': {
-    timeout: 0,
-    data: '{ "id": 0, "test": "None"}'
+    GET: function() {
+      return '{ "id": 0, "test": "None"}';
+    }
   },
 
   '/invalid.json': {
-    timeout: 0,
-    data: '{ id: 0, test: "None"}'
+    GET: function() {
+      return '{ id: 0, test: "None"}';
+    }
   }
 
 });

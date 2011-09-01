@@ -1,5 +1,5 @@
 // Set up mock api routes
-$.mock({
+vertebrae({
 
   '/valid.json': {
     GET: function() {

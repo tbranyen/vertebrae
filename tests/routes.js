@@ -1,5 +1,5 @@
 // Set up mock api routes
-$.mock({
+vertebrae({
   '/route/:id': {
     GET: function(id) {
       if (+id === 4) {

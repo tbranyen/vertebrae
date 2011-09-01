@@ -15,7 +15,7 @@ hacks / no compromises.  You can use all the jQuery deferred goodness and
 always work with a jqXHR object.
 
 Lastly this tool was built to make your life easier.  I'm open to all
-suggestions, so please send feedback! =)
+suggestions, so please send feedback! =).  persist somehow.
 
 Getting started
 ---------------
@@ -35,8 +35,9 @@ issues.
 Defining routes
 ---------------
 
-Routes are defined by passing an object literal to `$.mock` after including
-vertebrae.js.  Do not attempt to define before all dependencies are loaded.
+Routes are defined by passing an object literal to the function  `vertebrae`
+after including vertebrae.js.  Do not attempt to define before all dependencies
+are loaded.
 
 Backbone style paths are the keys in the mock object, any arguments you 
 define there will automatically be provided in he callback verb handlers
@@ -47,7 +48,7 @@ that identifier as a key and supplying an accompanying callback function.
 
 
 ``` javascript
-$.mock({
+vertebrae({
 
   '/valid.json': {
     GET: function() {

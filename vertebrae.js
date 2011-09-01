@@ -22,7 +22,7 @@ var _routes = {};
 
 // Assign directly onto jQuery to be indicative this is indeed
 // a plugin and requires jQuery to use.
-jQuery.mock = function(routes) {
+var vertebrae = window.vertebrae = function(routes) {
   var route;
   // Shorten Backbone regexp reference
   var routeToRegExp = Backbone.Router.prototype._routeToRegExp;
@@ -38,8 +38,23 @@ jQuery.mock = function(routes) {
   });
 };
 
+// Turn vertebrae into a Backbone clone
+_.extend(vertebrae, Backbone);
+
+// Update the model sync to use 
+vertebrae.Model.prototype.sync = function() {
+  console.log('lol');
+};
+
+// Still need to create key in object to save based off url/id or something,
+// do something special based off crud.  persist somehow.
+
+vertebrae.Collection.prototype.sync = function() {
+  console.log('lol');
+};
+
 // Plugin defaults, can be overwritten
-var defaults = jQuery.mock.options = {
+var defaults = vertebrae.options = {
   delay: {
     // Set 404 timeout to simulate real-world delay
     '404': 100

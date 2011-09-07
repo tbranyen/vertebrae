@@ -30,8 +30,6 @@ jQuery.mock = function(routes) {
     route = _routes[key] = val;
 
     route.regex = routeToRegExp(key);
-    route.timeout = route.timeout || 0;
-    route.statusCode = isNaN(route.statusCode) ? 200 : route.statusCode;
   });
 };
 
@@ -48,6 +46,7 @@ defaults = jQuery.mock.options = {
 // still be handled by jQuery's internal transports.  With the +, this
 // catch-all transport is bumped to the front and hijacks *ALL* requests.
 $.ajaxTransport('+*', function(options, originalOptions, jqXHR) {
+  var data;
   var timeout, captures, match, route;
   var method = options.type.toUpperCase();
 
@@ -81,13 +80,15 @@ $.ajaxTransport('+*', function(options, originalOptions, jqXHR) {
       // Ensure captures is an array and not null
       captures = captures || [];
 
+      // Slice off the path from captures, only want to send the
+      // arguments.  Capture the return value.
+      data = route[method].apply(jqXHR, captures.slice(1));
+
       // A timeout is useful for testing behavior that may require an abort
       // or simulating how slow requests will show up to an end user.
       timeout = window.setTimeout(function() {
-        completeCallback(route.statusCode, 'success', {
-          // Slice off the path from captures, only want to send the
-          // arguments.
-          responseText: route[method].apply(null, captures.slice(1))
+        completeCallback(jqXHR.status || 200, 'success', {
+          responseText: data
         });
       }, route.timeout);
     },

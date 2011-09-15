@@ -12,6 +12,13 @@ $.mock({
     GET: function() {
       return 'Hello World, Later';
     }
+  },
+
+  '/intentional': {
+    GET: function() {
+      this.status = 404;
+      return 'Hello World, Later';
+    }
   }
 
 });
@@ -48,6 +55,16 @@ asyncTest('404 timeout', function() {
   }).error(function(error) {
     var timeEnd = +new Date;
     ok((timeEnd-timeStart) >= 100, 'timed out for 100ms');
+    start();
+  });
+});
+
+asyncTest('intentional 404', function() {
+  $.get('/intentional', function(data) {
+    ok(false, 'Should not succeed here');
+    start();
+  }).error(function() {
+    ok(true, 'Should succeed here');
     start();
   });
 });

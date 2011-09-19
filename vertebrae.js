@@ -4,7 +4,7 @@
  * Tim Branyen @tbranyen, Copyright 2011
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Date Built: Mon, 19 Sep 2011 04:02:06 GMT
+ * Date Built: Mon, 19 Sep 2011 05:19:50 GMT
  */
 (function(global) {
 
@@ -15,7 +15,7 @@ var defaults;
 // Cache internally all future defined routes
 var _routes = {};
 
-ROUTING: {
+// Routing
 (function() {
   /*!
  * JavaScript Basic Route Matcher - v0.1pre - 9/16/2011
@@ -105,150 +105,109 @@ ROUTING: {
     return routeMatcher(route).match(url);
   };
 }).call(self.vendor);
-}
 
-JQUERY: {
+// Bundle jQuery plugin
+if (typeof jQuery !== "undefined") {
 (function() {
-  var lol = { lol: "hi" };
+  (function(global) {
 
+var self = global.jquery = {};
 
-  return lol;
+// Plugin defaults, can be overwritten
+self.defaults = {
+  delay: {
+    // Set 404 timeout to simulate real-world delay
+    '404': 100
+  }
+};
+
+// Adding transports in jQuery will push them to the end of the stack for
+// filtering.  Without the + preceding the wildcard *, most requests would
+// still be handled by jQuery's internal transports.  With the +, this
+// catch-all transport is bumped to the front and hijacks *ALL* requests.
+jQuery.ajaxTransport('+*', function(options, originalOptions, jqXHR) {
+  var data;
+  var timeout, captures, match, route;
+  var method = options.type.toUpperCase();
+
+  // Per the documentation a transport should return an object
+  // with two keys: send and abort.
+  //
+  // send: Passes the currently requested route through the routes
+  // object and attempts to find a match.  
+  return {
+    send: function(headers, completeCallback) {
+      // Use the underscore detect method to check if a route is found
+      // match will either be undefined (falsy) or true (truthy).
+      match = _.detect(_routes, function(val, key) {
+        captures = global.testRoute(key, options.url);
+        route = _routes[key];
+
+        // Capture has been found, ensure the requested type has a handler
+        if (captures && route[method]) {
+          return true;
+        }
+      });
+
+      // If no matches, trigger 404 with delay
+      if (!match) {
+        // Return to ensure that the successful handler is never run
+        return timeout = window.setTimeout(function() {
+          completeCallback(404, 'error');
+        }, defaults.delay['404']);
+      }
+
+      // Ensure captures is an array and not null
+      captures = captures || [];
+
+      // Slice off the path from captures, only want to send the
+      // arguments.  Capture the return value.
+      data = route[method].apply(jqXHR, captures.slice(1));
+
+      // A timeout is useful for testing behavior that may require an abort
+      // or simulating how slow requests will show up to an end user.
+      timeout = window.setTimeout(function() {
+        completeCallback(jqXHR.status || 200, 'success', {
+          responseText: data
+        });
+      }, route.timeout);
+    },
+
+    // This method will cancel any pending "request", by clearing the timeout
+    // that is responsible for triggering the success callback.
+    abort: function() {
+      window.clearTimeout(timeout);
+    }
+  };
 });
 
+})(this);
+
+}).call(self);
 }
 
-BACKBONE: {
-  if (Backbone) {
+if (typeof Backbone !== "undefined") {
+  // Shorten Backbone regexp reference
+  var routeToRegExp = Backbone.Router.prototype._routeToRegExp;
 
-    LOCAL_STORAGE: {
-      (function(window) {
-        with (self.vendor) {
-          /**
- * Backbone localStorage Adapter v1.0
- * https://github.com/jeromegn/Backbone.localStorage
- *
- * Date: Sun Aug 14 2011 09:53:55 -0400
- */
+  self.testRoute = function(route, url) {
+    return routeToRegExp(route).exec(url);
+  };
 
-// A simple module to replace `Backbone.sync` with *localStorage*-based
-// persistence. Models are given GUIDS, and saved into a JSON object. Simple
-// as that.
+  // Main Backbone plugin function
+  Backbone.Vertebrae = function() {
+    // Convert all URLs passed to regex and assign defaults if they
+    // are not provided.
+    _.each(this.routes, function(val, key) {
+      _routes[key] = val;
+    });
+  };
 
-// Generate four random hex digits.
-function S4() {
-   return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
-};
-
-// Generate a pseudo-GUID by concatenating random hexadecimal.
-function guid() {
-   return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
-};
-
-// Our Store is represented by a single JS object in *localStorage*. Create it
-// with a meaningful name, like the name you'd give a table.
-window.Store = function(name) {
-  this.name = name;
-  var store = localStorage.getItem(this.name);
-  this.records = (store && store.split(",")) || [];
-};
-
-_.extend(Store.prototype, {
-
-  // Save the current state of the **Store** to *localStorage*.
-  save: function() {
-    localStorage.setItem(this.name, this.records.join(","));
-  },
-
-  // Add a model, giving it a (hopefully)-unique GUID, if it doesn't already
-  // have an id of it's own.
-  create: function(model) {
-    if (!model.id) model.id = model.attributes.id = guid();
-    localStorage.setItem(this.name+"-"+model.id, JSON.stringify(model));
-    this.records.push(model.id.toString());
-    this.save();
-    return model;
-  },
-
-  // Update a model by replacing its copy in `this.data`.
-  update: function(model) {
-    localStorage.setItem(this.name+"-"+model.id, JSON.stringify(model));
-    if (!_.include(this.records, model.id.toString())) this.records.push(model.id.toString()); this.save();
-    return model;
-  },
-
-  // Retrieve a model from `this.data` by id.
-  find: function(model) {
-    return JSON.parse(localStorage.getItem(this.name+"-"+model.id));
-  },
-
-  // Return the array of all models currently in storage.
-  findAll: function() {
-    return _.map(this.records, function(id){return JSON.parse(localStorage.getItem(this.name+"-"+id));}, this);
-  },
-
-  // Delete a model from `this.data`, returning it.
-  destroy: function(model) {
-    localStorage.removeItem(this.name+"-"+model.id);
-    this.records = _.reject(this.records, function(record_id){return record_id == model.id.toString();});
-    this.save();
-    return model;
-  }
-
-});
-
-// Override `Backbone.sync` to use delegate to the model or collection's
-// *localStorage* property, which should be an instance of `Store`.
-Backbone.sync = function(method, model, options, error) {
-
-  // Backwards compatibility with Backbone <= 0.3.3
-  if (typeof options == 'function') {
-    options = {
-      success: options,
-      error: error
-    };
-  }
-
-  var resp;
-  var store = model.localStorage || model.collection.localStorage;
-
-  switch (method) {
-    case "read":    resp = model.id ? store.find(model) : store.findAll(); break;
-    case "create":  resp = store.create(model);                            break;
-    case "update":  resp = store.update(model);                            break;
-    case "delete":  resp = store.destroy(model);                           break;
-  }
-
-  if (resp) {
-    options.success(resp);
-  } else {
-    options.error("Record not found");
-  }
-};
-        }
-      })(self.vendor);
-    }
-
-    ROUTING: {
-    // Shorten Backbone regexp reference
-    var routeToRegExp = Backbone.Router.prototype._routeToRegExp;
-
-    self.testRoute = function(route, url) {
-      return routeToRegExp(route).exec(url);
-    };
-    }
-
-    // Main Backbone plugin function
-    Backbone.Vertebrae = function() {
-
-    };
-
-    // This extend method isn't publically available, so we'll just borrow it
-    // from the Backbone.Model constructor.
-    Backbone.Vertebrae.extend = Backbone.Model.extend;
-
-    // Add the store method from localStorage plugin
-    Backbone.Vertebrae.store = self.vendor.Store;
-  }
+  // This extend method isn't publically available, so we'll just borrow it
+  // from the Backbone.Model constructor.
+  Backbone.Vertebrae.extend = Backbone.Model.extend;
+  // Add the store method from localStorage plugin
+  Backbone.Vertebrae.store = self.vendor.Store;
 }
 
 })(this);

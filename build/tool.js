@@ -4,10 +4,10 @@ var fs = require("fs");
 // Parse out package.json configuration
 var package = JSON.parse(fs.readFileSync("package.json").toString());
 // Load in the parts
-var main = fs.readFileSync("lib/main.js").toString();
+var index = fs.readFileSync("lib/index.js").toString();
 
 // Create output file
-var output = combyne(main, {
+var output = combyne(index, {
   VERSION: package.version,
   YEAR: new Date().getFullYear(),
   DATE: new Date().toGMTString()

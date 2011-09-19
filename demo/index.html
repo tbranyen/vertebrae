@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang=en>
+<head>
+  <meta charset=utf-8>
+  <meta http-equiv=X-UA-Compatible content=IE=edge,chrome=1>
+
+  <title>Bone</title>
+</head>
+
+<body>
+  
+  <script src="js/libs/jquery.js"></script>
+  <script src="js/libs/underscore.js"></script>
+  <script src="js/libs/backbone.js"></script>
+  <script src="../vertebrae.js"></script>
+  <script>
+
+    MyModel = Backbone.View.extend({
+      urlRoot: "/myModel"
+    });
+
+    MyView = Backbone.View.extend({
+
+
+    });
+
+    // This tool creates a client-side RESTful server that will automatically
+    // manage all CRUD based on models.  It can also be used for testing and
+    // mocking AJAX requests, during development.
+    var Demo = Backbone.Vertebrae.extend({
+      // Change the backend storage and give a profile name
+      store: Backbone.Vertebrae.store('app-staging'),
+
+      // Automatically have CRUD generated for you :D
+      crud: {
+        '/mymodel': {
+          model: MyModel
+        }
+      }
+    });
+
+    var test = new Demo();
+    console.log(test);
+
+  </script>
+</body>
+</html>

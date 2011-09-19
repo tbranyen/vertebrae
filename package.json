@@ -1,0 +1,14 @@
+{
+  "name": "vertebrae",
+  "description": "Backbone.js client-side RESTful persistence",
+  "version": "0.0.0",
+  "author": "Tim Branyen <tim@tabdeveloper.com> (http://twitter.com/tbranyen)",
+  "main": "./vertebrae.js",
+  "devDependencies": {
+    "combyne": "*"
+  },
+  "engines": {
+    "node": "*"
+  }
+}
+

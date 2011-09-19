@@ -1,21 +1,25 @@
 // Set up mock api routes
-$.mock({
-  '/route/:id': {
-    GET: function(id) {
-      if (+id === 4) {
-        return '{ "id": 4, "test": "My Four" }';
+var Routes = Backbone.Vertebrae.extend({
+  routes: {
+    '/route/:id': {
+      GET: function(id) {
+        if (+id === 4) {
+          return '{ "id": 4, "test": "My Four" }';
+        }
+
+        return '{ "id": 0, "test": "None" }';
       }
+    },
 
-      return '{ "id": 0, "test": "None" }';
-    }
-  },
-
-  '/route/post': {
-    POST: function() {
-      return 'lol';
+    '/route/post': {
+      POST: function() {
+        return 'lol';
+      }
     }
   }
 });
+
+new Routes();
 
 module('routes');
 

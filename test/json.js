@@ -1,19 +1,23 @@
 // Set up mock api routes
-$.mock({
+Json = Backbone.Vertebrae.extend({
 
-  '/valid.json': {
-    GET: function() {
-      return '{ "id": 0, "test": "None"}';
-    }
-  },
+  routes: {
+    '/valid.json': {
+      GET: function() {
+        return '{ "id": 0, "test": "None"}';
+      }
+    },
 
-  '/invalid.json': {
-    GET: function() {
-      return '{ id: 0, test: "None"}';
+    '/invalid.json': {
+      GET: function() {
+        return '{ id: 0, test: "None"}';
+      }
     }
   }
 
 });
+
+new Json();
 
 module('json');
 

@@ -1,27 +1,31 @@
 // Set up mock api routes
-$.mock({
+Core = Backbone.Vertebrae.extend({
 
-  '/basic': {
-    GET: function() {
-      return 'Hello World';
-    }
-  },
+  routes: {
+    '/basic': {
+      GET: function() {
+        return 'Hello World';
+      }
+    },
 
-  '/timeout': {
-    timeout: 1000,
-    GET: function() {
-      return 'Hello World, Later';
-    }
-  },
+    '/timeout': {
+      timeout: 1000,
+      GET: function() {
+        return 'Hello World, Later';
+      }
+    },
 
-  '/intentional': {
-    GET: function() {
-      this.status = 404;
-      return 'Hello World, Later';
+    '/intentional': {
+      GET: function() {
+        this.status = 404;
+        return 'Hello World, Later';
+      }
     }
   }
 
 });
+
+new Core();
 
 module('core');
 

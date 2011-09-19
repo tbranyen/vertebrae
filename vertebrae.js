@@ -4,14 +4,12 @@
  * Tim Branyen @tbranyen, Copyright 2011
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Date Built: Mon, 19 Sep 2011 05:19:50 GMT
+ * Date Built: Mon, 19 Sep 2011 05:44:16 GMT
  */
 (function(global) {
 
 // Internal state
 var self = { vendor: {} };
-// Store default options
-var defaults;
 // Cache internally all future defined routes
 var _routes = {};
 
@@ -106,10 +104,10 @@ var _routes = {};
   };
 }).call(self.vendor);
 
-// Bundle jQuery plugin
-if (typeof jQuery !== "undefined") {
+// Load default plugins
 (function() {
-  (function(global) {
+  if (typeof jQuery !== "undefined") {
+    (function(global) {
 
 var self = global.jquery = {};
 
@@ -154,7 +152,7 @@ jQuery.ajaxTransport('+*', function(options, originalOptions, jqXHR) {
         // Return to ensure that the successful handler is never run
         return timeout = window.setTimeout(function() {
           completeCallback(404, 'error');
-        }, defaults.delay['404']);
+        }, self.defaults.delay['404']);
       }
 
       // Ensure captures is an array and not null
@@ -183,8 +181,9 @@ jQuery.ajaxTransport('+*', function(options, originalOptions, jqXHR) {
 
 })(this);
 
+  }
+  
 }).call(self);
-}
 
 if (typeof Backbone !== "undefined") {
   // Shorten Backbone regexp reference

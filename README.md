@@ -23,7 +23,11 @@ without Backbone, it will do absolutely nothing!
 
 Vertebrae can be used entirely localStorage backed as well.  This makes it
 function in essence, identical to `backbone.localStorage.js` of which, it
-embeds.
+embeds.  The one crucial difference here is that, per-design, Vertebrae
+does not require you to modify your existing models/collections to play
+nicely.  You just configure everything inside of your Vertebrae
+constructor and later on you could always delete the handlers and not have
+to change your existing project.
 
 Lastly this tool was built to make your life easier.  I'm open to all
 suggestions, so please send feedback! =)

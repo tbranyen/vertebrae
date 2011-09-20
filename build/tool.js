@@ -13,13 +13,15 @@ var output = combyne(index, {
   DATE: new Date().toGMTString()
 });
 
-output.filters.add('include', function(name, stripComments) {
-  if (stripComments) {
-    console.log('strip comments for filename', name);
-  }
+output.delimiters = {
+  START_PROP: "{(",
+  END_PROP: ")}"
+};
+
+output.filters.add("include", function(name) {
   // Need to be able to rip out first comment
   return fs.readFileSync(name + ".js").toString();
 });
 
 
-fs.writeFile('vertebrae.js', output.render());
+fs.writeFile("vertebrae.js", output.render());

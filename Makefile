@@ -3,3 +3,6 @@ BASE = .
 
 all:
 	@@$(NODE_JS) $(BASE)/build/tool
+
+watch:
+	@@$(NODE_JS) $(BASE)/build/watch

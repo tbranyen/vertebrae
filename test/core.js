@@ -68,7 +68,7 @@ asyncTest('intentional 404', function() {
     ok(false, 'Should not succeed here');
     start();
   }).error(function() {
-    ok(true, 'Should succeed here');
+    ok(true, 'Should error here');
     start();
   });
 });

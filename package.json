@@ -1,6 +1,6 @@
 {
   "name": "vertebrae",
-  "description": "Backbone.js client-side RESTful persistence",
+  "description": "Backbone Persistence and jQuery AJAX Management Plugin",
   "version": "0.0.0",
   "author": "Tim Branyen <tim@tabdeveloper.com> (http://twitter.com/tbranyen)",
   "main": "./vertebrae.js",

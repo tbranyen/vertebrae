@@ -66,7 +66,6 @@ that identifier as a key and supplying an accompanying callback function.
 ``` javascript
 // Declare example route based overrides
 ExampleLayer = Backbone.Vertebrae.extend({
-  
   routes: {
     '/valid.json': {
       GET: function() {
@@ -80,7 +79,6 @@ ExampleLayer = Backbone.Vertebrae.extend({
       }
     }
   }
-
 });
 
 // Initialize the layer
@@ -105,7 +103,6 @@ plugin for jQuery as well.
 ``` javascript
 // Declare example route based overrides
 jQuery.vertebrae({
-  
   '/valid.json': {
     GET: function() {
       return '{ "test": "None" }';
@@ -117,7 +114,6 @@ jQuery.vertebrae({
       return '{ "id": ' + id + ' }';
     }
   }
-
 });
 
 // Consuming
@@ -150,10 +146,8 @@ MyModel = Backbone.Model.extend({
 
 // Declare example route based overrides
 ExampleLayer = Backbone.Vertebrae.extend({
-  
   profile: "example-layer",
   persist: [ MyModel ]
-
 });
 
 // Initialize the layer

@@ -161,7 +161,7 @@ new ExampleLayer();
 var myModel = new MyModel();
 
 // First save the model to the localStorage persistence
-myModel.save({
+myModel.save({ lol: "duh" }, {
   success: function() {
     // Clear it so you know we aren't cheating
     myModel.clear();
@@ -169,7 +169,7 @@ myModel.save({
     myModel.fetch({
       success: function() {
         // Test the lol attribute
-        console.log(myModel.get('lol'));
+        console.log(myModel.get('lol')); // duh
       }
     });
   }

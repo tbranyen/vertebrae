@@ -5,7 +5,8 @@
   "author": "Tim Branyen <tim@tabdeveloper.com> (http://twitter.com/tbranyen)",
   "main": "./vertebrae.js",
   "devDependencies": {
-    "combyne": "*"
+    "combyne": "*",
+    "uglify-js": "*"
   },
   "engines": {
     "node": "*"

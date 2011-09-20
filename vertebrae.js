@@ -4,7 +4,7 @@
  * Tim Branyen @tbranyen, Copyright 2011
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Date Built: Tue, 20 Sep 2011 05:01:03 GMT
+ * Date Built: Tue, 20 Sep 2011 05:19:57 GMT
  */
 (function(global) {
 
@@ -15,7 +15,7 @@ var _routes = {};
 // Shorten Backbone regexp reference
 var routeToRegExp = Backbone.Router.prototype._routeToRegExp;
 
-// Load default plugins
+// Load plugins
 (function() {
   if (typeof jQuery !== "undefined") {
     (function(global) {
@@ -118,6 +118,7 @@ jQuery.ajaxTransport('+*', function(options, originalOptions, jqXHR) {
 
   }
 
+  // Vendor stuff
   (function(_, Backbone) {
   // A simple module to replace `Backbone.sync` with *localStorage*-based
   // persistence. Models are given GUIDS, and saved into a JSON object. Simple
@@ -237,32 +238,42 @@ jQuery.ajaxTransport('+*', function(options, originalOptions, jqXHR) {
 
 }).call(global);
 
-// Main Backbone plugin function
-Backbone.Vertebrae = function() {
-  var type;
+// Allow for Backbone augmentation
+if (typeof Backbone !== "undefined") {
+  // Main Backbone plugin function
+  Backbone.Vertebrae = function() {
+    var i, len, type;
 
-  // Convert all URLs passed to regex and assign defaults if they
-  // are not provided.
-  _.each(this.routes, function(val, key) {
-    _routes[key] = val;
-
-    // Add in localStorage support
-    if (type = val.model || val.collection) {
-      type.prototype.localStorage = new Backbone.Storage(val.profile || "");
+    // Persistables
+    if (this.persist && (len = this.persist.length)) {
+      for (i = 0; i < len; i++) {
+        this.persist[i].prototype.localStorage = new Backbone.Storage(this.profile || "");
+      }
     }
-  });
 
-  if (typeof jQuery !== "undefined") {
-    jQuery.vertebrae.options.testRoute = function(route, url) {
-      return routeToRegExp(route).exec(url);
-    };
+    // Convert all URLs passed to regex and assign defaults if they
+    // are not provided.
+    _.each(this.routes, function(val, key) {
+      _routes[key] = val;
 
-    return jQuery.vertebrae(this.routes);
-  }
-};
+      // Add in localStorage support
+      if (type = val.model || val.collection) {
+        type.prototype.localStorage = new Backbone.Storage(val.profile || "");
+      }
+    });
 
-// This extend method isn't publically available, so we'll just borrow it
-// from the Backbone.Model constructor.
-Backbone.Vertebrae.extend = Backbone.Model.extend;
+    if (typeof jQuery !== "undefined") {
+      jQuery.vertebrae.options.testRoute = function(route, url) {
+        return routeToRegExp(route).exec(url);
+      };
+
+      return jQuery.vertebrae(this.routes || {});
+    }
+  };
+
+  // This extend method isn't publically available, so we'll just borrow it
+  // from the Backbone.Model constructor.
+  Backbone.Vertebrae.extend = Backbone.Model.extend;
+}
 
 })(this);

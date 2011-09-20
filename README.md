@@ -121,7 +121,9 @@ jQuery.vertebrae({
 });
 
 // Consuming
-$.get('/valid.json', function(data) { data.test == "None" });
+$.getJSON('/valid.json', function(data) {
+  console.log(data.test); // None
+});
 ```
 
 Defining Backbone persistence

@@ -16,33 +16,38 @@
   <script>
 
     MyModel = Backbone.Model.extend({
-      urlRoot: "/mymodel"
+      urlRoot: "/mymodel",
+
+      defaults: {
+        hi: "lol",
+        goodbye: "cry"
+      }
     });
 
     var AppStaging = Backbone.Vertebrae.extend({
-      //profile: "app-staging",
+      profile: "app-staging",
 
       routes: {
-        "/mymodel/:id": {
-          GET: function(id) {
-            return '{ "id": '+ id +', "hi": "lol", "goodbye": "cry" }';
-          }
+        "/mymodel": {
+          model: MyModel
         }
+        //"/mymodel/:id": {
+        //  GET: function(id) {
+        //    return '{ "id": '+ id +', "hi": "lol", "goodbye": "cry" }';
+        //  }
+        //}
       }
     });
 
     new AppStaging();
 
     var lol = new MyModel({ id: 0 });
-    var lol2 = new MyModel({ id: 1 });
+    var lol2 = new MyModel({ id: 1, goodbye: "meh" });
 
-    lol.fetch({
-      sucess: function() { console.log('success', this, arguments) },
-      error: function() { console.log('error', this, arguments) }
-    });
-
-    $.when(lol.fetch(), lol2.fetch()).then(function() {
-      console.log(lol.get("hi"), lol2.get("goodbye")); // lol cry
+    $.when(lol.save(), lol2.save()).then(function() {
+      $.when(lol.fetch(), lol2.fetch()).then(function() {
+        console.log(lol.get("hi"), lol2.get("goodbye")); // lol meh
+      });
     });
 
   </script>

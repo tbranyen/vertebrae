@@ -17,7 +17,11 @@ function watch(path) {
   };
 }
 
-monitor([watch("lib"), watch("lib/plugins")], function() {
+function update() {
   exec("make");
   console.log("Updated vertebrae.js");
-});
+}
+
+monitor([watch("lib"), watch("lib/plugins")], update);
+
+update();

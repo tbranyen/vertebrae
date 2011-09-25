@@ -4,7 +4,7 @@
  * Tim Branyen @tbranyen, Copyright 2011
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Date Built: Tue, 20 Sep 2011 05:19:57 GMT
+ * Date Built: Sun, 25 Sep 2011 21:25:50 GMT
  */
 (function(global) {
 
@@ -48,7 +48,9 @@ defaults = jQuery.vertebrae.options = {
   delay: {
     // Set 404 timeout to simulate real-world delay
     '404': 100
-  }
+  },
+  // Allow AJAX requests to pass through
+  passthrough: true
 };
 
 // Adding transports in jQuery will push them to the end of the stack for
@@ -60,6 +62,27 @@ jQuery.ajaxTransport('+*', function(options, originalOptions, jqXHR) {
   var timeout, captures, match, route;
   var method = options.type.toUpperCase();
 
+  // Detect method to check if a route is found match will either be
+  // undefined (falsy) or true (truthy).
+  jQuery.each(_routes, function(key, val) {
+    captures = defaults.testRoute(key, options.url);
+    route = _routes[key];
+    
+    // Capture has been found, ensure the requested type has a handler
+    if (captures && route[method]) {
+      match = true;
+
+      // Break the jQuery.each loop
+      return false;
+    }
+  });
+
+  // If no matches were found, instead of triggering a fake 404, attempt
+  // to use real AJAX
+  if (!match && defaults.passthrough) {
+    return null;
+  }
+
   // Per the documentation a transport should return an object
   // with two keys: send and abort.
   //
@@ -67,21 +90,6 @@ jQuery.ajaxTransport('+*', function(options, originalOptions, jqXHR) {
   // object and attempts to find a match.  
   return {
     send: function(headers, completeCallback) {
-      // Detect method to check if a route is found match will either be
-      // undefined (falsy) or true (truthy).
-      jQuery.each(_routes, function(key, val) {
-        captures = defaults.testRoute(key, options.url);
-        route = _routes[key];
-        
-        // Capture has been found, ensure the requested type has a handler
-        if (captures && route[method]) {
-          match = true;
-
-          // Break the jQuery.each loop
-          return false;
-        }
-      });
-
       // If no matches, trigger 404 with delay
       if (!match) {
         // Return to ensure that the successful handler is never run
@@ -240,8 +248,9 @@ jQuery.ajaxTransport('+*', function(options, originalOptions, jqXHR) {
 
 // Allow for Backbone augmentation
 if (typeof Backbone !== "undefined") {
+
   // Main Backbone plugin function
-  Backbone.Vertebrae = function() {
+  Backbone.Vertebrae = function(options) {
     var i, len, type;
 
     // Persistables

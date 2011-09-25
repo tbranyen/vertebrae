@@ -92,11 +92,12 @@ new ExampleLayer();
 $.get('/valid.json', function(data) { data.test == "None" });
 
 ```
-
-Since you are creating constructor functions that are later on called, much 
-like Router, you are able to conditionally load a set.  This opens up the
-possibility for many layers.
-
+Instead of having sets of routes and persistence rules defined on models and
+collections which depend on a third-party plugin (backbone.localStorage.js),
+Vertebrae has you define what should be persisted inside a RouteSet.  This
+RouteSet is then initialized when you want to use those particular rules.
+Defining and initializing rules this way allows you to toggle and conditionally
+choose based on the environment, such as testing, production, bugs, etc.
 
 __With jQuery__
 

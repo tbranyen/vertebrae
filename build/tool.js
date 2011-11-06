@@ -15,7 +15,8 @@ var output = combyne(index, {
 
 output.delimiters = {
   START_PROP: "{(",
-  END_PROP: ")}"
+  END_PROP: ")}",
+  FILTER: "@"
 };
 
 output.filters.add("include", function(name) {
@@ -24,4 +25,4 @@ output.filters.add("include", function(name) {
 });
 
 
-fs.writeFile("vertebrae.js", output.render());
+fs.writeFile("./dist/vertebrae.js", output.render());

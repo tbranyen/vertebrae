@@ -178,3 +178,36 @@ myModel.save({ lol: "duh" }, {
   }
 });
 ```
+
+Late binding persistence
+------------------------
+
+In the case that you do not have your models loaded *before* you call Backbone,
+you can use functions to return your Models/Collections to persist.  For
+instance, you can load the simulation script before declaring your structures
+as this example illustrates:
+
+What would have happened if you did not use a function, is that MyModel would
+be considered undefined and potentially throw an undeclared error.
+
+``` javascript
+// Declare example route based overrides
+ExampleLayer = Backbone.Vertebrae.extend({
+  profile: "example-layer",
+  persist: function() {
+    return [ MyModel ];
+  }
+});
+
+// Example model
+MyModel = Backbone.Model.extend({
+  defaults: {
+    lol: "hi"
+  }
+});
+
+// Initialize the layer
+new ExampleLayer();
+
+// ... The rest is the same as the example above.
+```

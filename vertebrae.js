@@ -4,7 +4,7 @@
  * Tim Branyen @tbranyen, Copyright 2011
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Date Built: Sun, 25 Sep 2011 21:25:50 GMT
+ * Date Built: Sun, 06 Nov 2011 22:03:21 GMT
  */
 (function(global) {
 
@@ -253,10 +253,15 @@ if (typeof Backbone !== "undefined") {
   Backbone.Vertebrae = function(options) {
     var i, len, type;
 
+    // If persist is a function, call it
+    if (typeof this.persist == "function") {
+      this.persist = this.persist();
+    }
+
     // Persistables
     if (this.persist && (len = this.persist.length)) {
       for (i = 0; i < len; i++) {
-        this.persist[i].prototype.localStorage = new Backbone.Storage(this.profile || "");
+        this.persist[i].prototype.localStorage = new Backbone.Storage(this.profile | 
       }
     }
 
@@ -266,8 +271,8 @@ if (typeof Backbone !== "undefined") {
       _routes[key] = val;
 
       // Add in localStorage support
-      if (type = val.model || val.collection) {
-        type.prototype.localStorage = new Backbone.Storage(val.profile || "");
+      if (type = val.model | 
+        type.prototype.localStorage = new Backbone.Storage(val.profile | 
       }
     });
 
@@ -276,7 +281,7 @@ if (typeof Backbone !== "undefined") {
         return routeToRegExp(route).exec(url);
       };
 
-      return jQuery.vertebrae(this.routes || {});
+      return jQuery.vertebrae(this.routes | 
     }
   };
 

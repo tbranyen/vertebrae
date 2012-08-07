@@ -1,6 +1,8 @@
+jQuery.vertebrae.options.passthrough = false;
+
 // Set up mock api routes
 Core = Backbone.Vertebrae.extend({
-
+  
   routes: {
     '/basic': {
       GET: function() {

@@ -107,6 +107,7 @@ jQuery.ajaxTransport('+*', function(options, originalOptions, jqXHR) {
       // jqXHR object.
       context = {
         jqXHR: jqXHR,
+        params: options.data,
         instance: route.__instance__
       };
 

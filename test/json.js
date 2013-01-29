@@ -36,8 +36,8 @@ asyncTest('invalid json', function() {
   $.getJSON('/invalid.json', function(data) {
     ok(false, 'Should not succeed here');
     start();
-  }).error(function(error) {
-    equals(error.statusText, 'parsererror');
+  }).error(function(jqXHR, textStatus) {
+    equals(textStatus, 'parsererror');
     start();
   });
 });

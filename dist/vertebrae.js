@@ -1,10 +1,10 @@
 /* vertebrae.js 0.0.0
  *
  * jQuery Plugin to mock AJAX requests for Backbone applications.
- * Tim Branyen 2011
+ * Tim Branyen @tbranyen, Copyright 2013
  * Dual licensed under the MIT or GPL Version 2 licenses.
  *
- * Date Built: Sun, 06 Nov 2011 22:28:57 GMT
+ * Date Built: Tue, 29 Jan 2013 19:48:25 GMT
  */
 (function(global) {
 
@@ -90,8 +90,6 @@ jQuery.ajaxTransport('+*', function(options, originalOptions, jqXHR) {
   // object and attempts to find a match.  
   return {
     send: function(headers, completeCallback) {
-      var context;
-
       // If no matches, trigger 404 with delay
       if (!match) {
         // Return to ensure that the successful handler is never run
@@ -103,18 +101,9 @@ jQuery.ajaxTransport('+*', function(options, originalOptions, jqXHR) {
       // Ensure captures is an array and not null
       captures = captures || [];
 
-      // Set the context to contain references to the Vetebrae instance and the
-      // jqXHR object.
-      context = {
-        jqXHR: jqXHR,
-        params: options.data,
-        instance: route.__instance__
-      };
-
       // Slice off the path from captures, only want to send the
       // arguments.  Capture the return value.
-      data = route[method].apply(context,
-        [options.url].concat(captures.slice(1)));
+      data = route[method].apply(jqXHR, captures.slice(1));
 
       // A timeout is useful for testing behavior that may require an abort
       // or simulating how slow requests will show up to an end user.
@@ -281,18 +270,11 @@ if (typeof Backbone !== "undefined") {
     _.each(this.routes, function(val, key) {
       _routes[key] = val;
 
-      // Add reference to this instance.
-      _routes[key].__instance__ = this;
-
       // Add in localStorage support
       if (type = val.model || val.collection) {
         type.prototype.localStorage = new Backbone.Storage(val.profile || "");
       }
-    }, this);
-
-    if (_.isFunction(this.initialize)) {
-      this.initialize();
-    }
+    });
 
     if (typeof jQuery !== "undefined") {
       jQuery.vertebrae.options.testRoute = function(route, url) {

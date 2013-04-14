@@ -1,15 +1,42 @@
 {
+  "author": "Tim Branyen (@tbranyen)",
   "name": "vertebrae",
-  "description": "Backbone Persistence and jQuery AJAX Management Plugin",
-  "version": "0.0.0",
-  "author": "Tim Branyen <tim@tabdeveloper.com> (http://twitter.com/tbranyen)",
-  "main": "./vertebrae.js",
-  "devDependencies": {
-    "combyne": "*",
-    "uglify-js": "*"
+  "description": "Robust Backbone transport modification.",
+  "version": "0.1.0-pre",
+  "homepage": "http://tbranyen.github.com/vertebrae/",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/tbranyen/vertebrae.git"
   },
   "engines": {
-    "node": "*"
+    "node": ">=0.8"
+  },
+  "devDependencies": {
+    "grunt": "~0.4",
+    "grunt-cli": "~0.1",
+    "grunt-contrib-jshint": "0.1.1rc5",
+    "grunt-contrib-qunit": "0.1.1rc5"
+  },
+  "scripts": {
+    "test": "grunt"
+  },
+  "jam": {
+    "dependencies": {
+      "underscore": "~1.4",
+      "backbone": "~1.0",
+      "jquery": ">=1.6"
+    },
+    "include": [
+      "vertebrae.js"
+    ],
+    "main": "vertebrae.js",
+    "shim": {
+      "deps": [
+        "jquery",
+        "backbone",
+        "underscore"
+      ],
+      "exports": "Backbone.Vertebrae"
+    }
   }
 }
-

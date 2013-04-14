@@ -2,7 +2,7 @@
 var Routes = Backbone.Vertebrae.extend({
   routes: {
     '/route/:id': {
-      GET: function(id) {
+      GET: function(url, id) {
         if (+id === 4) {
           return '{ "id": 4, "test": "My Four" }';
         }

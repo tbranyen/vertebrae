@@ -19,7 +19,7 @@ Core = Backbone.Vertebrae.extend({
 
     '/intentional': {
       GET: function() {
-        this.status = 404;
+        this.jqXHR.status = 404;
         return 'Hello World, Later';
       }
     }

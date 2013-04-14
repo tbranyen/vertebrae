@@ -1,41 +1,31 @@
-vertebrae.js: Backbone Persistence and jQuery AJAX Management Plugin
-====================================================================
+vertebrae
+=========
 
-Introduction
-------------
+> Backbone Persistence and jQuery AJAX Management Plugin
 
-When developing a client side application it is very convenient to stub out
-API calls to avoid being held up by server developments.
+**v0.1.0-pre** [![Build
+Status](https://travis-ci.org/tbranyen/vertebrae.png?branch=master)](https://travis-ci.org/tbranyen/vertebrae)
 
-What separates vertebrae.js from other similar scripts is that it uses the 
+Maintained by Tim Branyen [@tbranyen](http://twitter.com/tbranyen) with help
+from [awesome
+contributors](https://github.com/tbranyen/vertebrae/contributors)!
+
+When developing a client side application it is convenient to break out the
+transports used to fulfill API requests.
+
+What separates vertebrae.js from other similar scripts is that it uses the
 exact same Backbone routing regular expressions so you can define routes the
-way you already know how.  It also uses the official jQuery Transport API
-to allow *identical* responses as if you made them live to the server.  No
-hacks / no compromises.  You can use all the jQuery deferred goodness and 
-always work with a jqXHR object.
-
-Vetebrae functions completely with or without Backbone and with or without
-jQuery.  If you drop vertebrae.js into a project without Backbone, but has
-jQuery, you'll get full access to the jQuery plugin.  If you are in a
-project that has Backbone, but not jQuery, it will still function, but by
-overriding Backbone.sync.  Finally if you use Vertebrae without jQuery and
-without Backbone, it will do absolutely nothing!
-
-Vertebrae can be used entirely localStorage backed as well.  This makes it
-function in essence, identical to `backbone.localStorage.js` of which, it
-embeds.  The one crucial difference here is that, per-design, Vertebrae
-does not require you to modify your existing models/collections to play
-nicely.  You just configure everything inside of your Vertebrae
-constructor and later on you could always delete the handlers and not have
-to change your existing project.
+way you already know how.  It also uses the official jQuery Transport API to
+allow *identical* responses as if you made them live to the server with no
+hacks.  You can use all the jQuery deferred goodness and always work with a
+jqXHR object.
 
 Lastly this tool was built to make your life easier.  I'm open to all
 suggestions, so please send feedback! =)
 
-Getting started
----------------
+## Getting started ##
 
-Include into existing Backbone application
+Include into existing Backbone application:
 
 ``` html
 <!-- Optional dependencies -->
@@ -50,8 +40,7 @@ Include into existing Backbone application
 Compatibility: Everything Backbone and jQuery supports? Let me know if you find
 issues.
 
-Defining routes
----------------
+## Defining routes ##
 
 __With Backbone__
 
@@ -127,8 +116,7 @@ $.getJSON('/valid.json', function(data) {
 });
 ```
 
-Defining Backbone persistence
------------------------------
+## Defining Backbone persistence ##
 
 Vertebrae comes bundled with a modified version of Backbone.localStorage.  If
 you define the models/collections you would like to persist in the `persist`
@@ -179,8 +167,7 @@ myModel.save({ lol: "duh" }, {
 });
 ```
 
-Late binding persistence
-------------------------
+## Late binding persistence ##
 
 In the case that you do not have your models loaded *before* you call Backbone,
 you can use functions to return your Models/Collections to persist.  For

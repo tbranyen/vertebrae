@@ -1,0 +1,10 @@
+{
+  "name": "vertebrae",
+  "version": "0.1.0-pre",
+  "main": "vertebrae.js",
+  "dependencies": {
+    "jquery": ">=1.6",
+    "underscore": "~1.4",
+    "backbone": "~1.0"
+  }
+}

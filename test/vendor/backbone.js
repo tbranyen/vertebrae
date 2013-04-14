@@ -1,26 +1,3 @@
-<<<<<<< HEAD
-//     Backbone.js 0.9.10
- 
-//     (c) 2010-2012 Jeremy Ashkenas, DocumentCloud Inc.
-//     Backbone may be freely distributed under the MIT license.
-//     For all details and documentation:
-//     http://backbonejs.org
- 
-(function(){
- 
-  // Initial Setup
-  // -------------
- 
-  // Save a reference to the global object (`window` in the browser, `exports`
-  // on the server).
-  var root = this;
- 
-  // Save the previous value of the `Backbone` variable, so that it can be
-  // restored later on, if `noConflict` is used.
-  var previousBackbone = root.Backbone;
- 
-  // Create a local reference to array methods.
-=======
 //     Backbone.js 1.0.0
 
 //     (c) 2010-2013 Jeremy Ashkenas, DocumentCloud Inc.
@@ -42,39 +19,19 @@
   var previousBackbone = root.Backbone;
 
   // Create local references to array methods we'll want to use later.
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
   var array = [];
   var push = array.push;
   var slice = array.slice;
   var splice = array.splice;
-<<<<<<< HEAD
- 
-  // The top-level namespace. All public Backbone classes and modules will
-  // be attached to this. Exported for both CommonJS and the browser.
-=======
 
   // The top-level namespace. All public Backbone classes and modules will
   // be attached to this. Exported for both the browser and the server.
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
   var Backbone;
   if (typeof exports !== 'undefined') {
     Backbone = exports;
   } else {
     Backbone = root.Backbone = {};
   }
-<<<<<<< HEAD
- 
-  // Current version of the library. Keep in sync with `package.json`.
-  Backbone.VERSION = '0.9.10';
- 
-  // Require Underscore, if we're on the server, and it's not already present.
-  var _ = root._;
-  if (!_ && (typeof require !== 'undefined')) _ = require('underscore');
- 
-  // For Backbone's purposes, jQuery, Zepto, or Ender owns the `$` variable.
-  Backbone.$ = root.jQuery || root.Zepto || root.ender;
- 
-=======
 
   // Current version of the library. Keep in sync with `package.json`.
   Backbone.VERSION = '1.0.0';
@@ -87,82 +44,27 @@
   // the `$` variable.
   Backbone.$ = root.jQuery || root.Zepto || root.ender || root.$;
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
   // Runs Backbone.js in *noConflict* mode, returning the `Backbone` variable
   // to its previous owner. Returns a reference to this Backbone object.
   Backbone.noConflict = function() {
     root.Backbone = previousBackbone;
     return this;
   };
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
   // Turn on `emulateHTTP` to support legacy HTTP servers. Setting this option
   // will fake `"PUT"` and `"DELETE"` requests via the `_method` parameter and
   // set a `X-Http-Method-Override` header.
   Backbone.emulateHTTP = false;
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
   // Turn on `emulateJSON` to support legacy servers that can't deal with direct
   // `application/json` requests ... will encode the body as
   // `application/x-www-form-urlencoded` instead and will send the model in a
   // form param named `model`.
   Backbone.emulateJSON = false;
-<<<<<<< HEAD
- 
-  // Backbone.Events
-  // ---------------
- 
-  // Regular expression used to split event strings.
-  var eventSplitter = /\s+/;
- 
-  // Implement fancy features of the Events API such as multiple event
-  // names `"change blur"` and jQuery-style event maps `{change: action}`
-  // in terms of the existing API.
-  var eventsApi = function(obj, action, name, rest) {
-    if (!name) return true;
-    if (typeof name === 'object') {
-      for (var key in name) {
-        obj[action].apply(obj, [key, name[key]].concat(rest));
-      }
-    } else if (eventSplitter.test(name)) {
-      var names = name.split(eventSplitter);
-      for (var i = 0, l = names.length; i < l; i++) {
-        obj[action].apply(obj, [names[i]].concat(rest));
-      }
-    } else {
-      return true;
-    }
-  };
- 
-  // Optimized internal dispatch function for triggering events. Tries to
-  // keep the usual cases speedy (most Backbone events have 3 arguments).
-  var triggerEvents = function(events, args) {
-    var ev, i = -1, l = events.length;
-    switch (args.length) {
-    case 0: while (++i < l) (ev = events[i]).callback.call(ev.ctx);
-    return;
-    case 1: while (++i < l) (ev = events[i]).callback.call(ev.ctx, args[0]);
-    return;
-    case 2: while (++i < l) (ev = events[i]).callback.call(ev.ctx, args[0], args[1]);
-    return;
-    case 3: while (++i < l) (ev = events[i]).callback.call(ev.ctx, args[0], args[1], args[2]);
-    return;
-    default: while (++i < l) (ev = events[i]).callback.apply(ev.ctx, args);
-    }
-  };
- 
-=======
 
   // Backbone.Events
   // ---------------
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
   // A module that can be mixed in to *any object* in order to provide it with
   // custom events. You may bind with `on` or remove with `off` callback
   // functions to an event; `trigger`-ing an event fires all callbacks in
@@ -174,24 +76,6 @@
   //     object.trigger('expand');
   //
   var Events = Backbone.Events = {
-<<<<<<< HEAD
- 
-    // Bind one or more space separated events, or an events map,
-    // to a `callback` function. Passing `"all"` will bind the callback to
-    // all events fired.
-    on: function(name, callback, context) {
-      if (!(eventsApi(this, 'on', name, [callback, context]) && callback)) return this;
-      this._events || (this._events = {});
-      var list = this._events[name] || (this._events[name] = []);
-      list.push({callback: callback, context: context, ctx: context || this});
-      return this;
-    },
- 
-    // Bind events to only be triggered a single time. After the first time
-    // the callback is invoked, it will be removed.
-    once: function(name, callback, context) {
-      if (!(eventsApi(this, 'once', name, [callback, context]) && callback)) return this;
-=======
 
     // Bind an event to a `callback` function. Passing `"all"` will bind
     // the callback to all events fired.
@@ -207,63 +91,26 @@
     // the callback is invoked, it will be removed.
     once: function(name, callback, context) {
       if (!eventsApi(this, 'once', name, [callback, context]) || !callback) return this;
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
       var self = this;
       var once = _.once(function() {
         self.off(name, once);
         callback.apply(this, arguments);
       });
       once._callback = callback;
-<<<<<<< HEAD
-      this.on(name, once, context);
-      return this;
-    },
- 
-=======
       return this.on(name, once, context);
     },
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Remove one or many callbacks. If `context` is null, removes all
     // callbacks with that function. If `callback` is null, removes all
     // callbacks for the event. If `name` is null, removes all bound
     // callbacks for all events.
     off: function(name, callback, context) {
-<<<<<<< HEAD
-      var list, ev, events, names, i, l, j, k;
-=======
       var retain, ev, events, names, i, l, j, k;
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
       if (!this._events || !eventsApi(this, 'off', name, [callback, context])) return this;
       if (!name && !callback && !context) {
         this._events = {};
         return this;
       }
-<<<<<<< HEAD
- 
-      names = name ? [name] : _.keys(this._events);
-      for (i = 0, l = names.length; i < l; i++) {
-        name = names[i];
-        if (list = this._events[name]) {
-          events = [];
-          if (callback || context) {
-            for (j = 0, k = list.length; j < k; j++) {
-              ev = list[j];
-              if ((callback && callback !== ev.callback &&
-                               callback !== ev.callback._callback) ||
-                  (context && context !== ev.context)) {
-                events.push(ev);
-              }
-            }
-          }
-          this._events[name] = events;
-        }
-      }
- 
-      return this;
-    },
- 
-=======
 
       names = name ? [name] : _.keys(this._events);
       for (i = 0, l = names.length; i < l; i++) {
@@ -286,7 +133,6 @@
       return this;
     },
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Trigger one or many events, firing all bound callbacks. Callbacks are
     // passed the same arguments as `trigger` is, apart from the event name
     // (unless you're listening on `"all"`, which will cause your callback to
@@ -301,54 +147,11 @@
       if (allEvents) triggerEvents(allEvents, arguments);
       return this;
     },
-<<<<<<< HEAD
- 
-    // An inversion-of-control version of `on`. Tell *this* object to listen to
-    // an event in another object ... keeping track of what it's listening to.
-    listenTo: function(obj, name, callback) {
-      var listeners = this._listeners || (this._listeners = {});
-      var id = obj._listenerId || (obj._listenerId = _.uniqueId('l'));
-      listeners[id] = obj;
-      obj.on(name, typeof name === 'object' ? this : callback, this);
-      return this;
-    },
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Tell this object to stop listening to either specific events ... or
     // to every object it's currently listening to.
     stopListening: function(obj, name, callback) {
       var listeners = this._listeners;
-<<<<<<< HEAD
-      if (!listeners) return;
-      if (obj) {
-        obj.off(name, typeof name === 'object' ? this : callback, this);
-        if (!name && !callback) delete listeners[obj._listenerId];
-      } else {
-        if (typeof name === 'object') callback = this;
-        for (var id in listeners) {
-          listeners[id].off(name, callback, this);
-        }
-        this._listeners = {};
-      }
-      return this;
-    }
-  };
- 
-  // Aliases for backwards compatibility.
-  Events.bind   = Events.on;
-  Events.unbind = Events.off;
- 
-  // Allow the `Backbone` object to serve as a global event bus, for folks who
-  // want global "pubsub" in a convenient place.
-  _.extend(Backbone, Events);
- 
-  // Backbone.Model
-  // --------------
- 
-  // Create a new model, with defined attributes. A client id (`cid`)
-=======
       if (!listeners) return this;
       var deleteListener = !name && !callback;
       if (typeof name === 'object') callback = this;
@@ -438,23 +241,15 @@
   // performing computations and transformations on that data.
 
   // Create a new model with the specified attributes. A client id (`cid`)
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
   // is automatically generated and assigned for you.
   var Model = Backbone.Model = function(attributes, options) {
     var defaults;
     var attrs = attributes || {};
-<<<<<<< HEAD
-    this.cid = _.uniqueId('c');
-    this.attributes = {};
-    if (options && options.collection) this.collection = options.collection;
-    if (options && options.parse) attrs = this.parse(attrs, options) || {};
-=======
     options || (options = {});
     this.cid = _.uniqueId('c');
     this.attributes = {};
-    if (options.collection) this.collection = options.collection;
+    _.extend(this, _.pick(options, modelOptions));
     if (options.parse) attrs = this.parse(attrs, options) || {};
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     if (defaults = _.result(this, 'defaults')) {
       attrs = _.defaults({}, attrs, defaults);
     }
@@ -462,23 +257,9 @@
     this.changed = {};
     this.initialize.apply(this, arguments);
   };
-<<<<<<< HEAD
- 
-  // Attach all inheritable methods to the Model prototype.
-  _.extend(Model.prototype, Events, {
- 
-    // A hash of attributes whose current and previous value differ.
-    changed: null,
- 
-    // The default name for the JSON `id` attribute is `"id"`. MongoDB and
-    // CouchDB users may want to set this to `"_id"`.
-    idAttribute: 'id',
- 
-    // Initialize is an empty function by default. Override it with your own
-    // initialization logic.
-    initialize: function(){},
- 
-=======
+
+  // A list of options to be attached directly to the model, if provided.
+  var modelOptions = ['url', 'urlRoot', 'collection'];
 
   // Attach all inheritable methods to the Model prototype.
   _.extend(Model.prototype, Events, {
@@ -497,19 +278,10 @@
     // initialization logic.
     initialize: function(){},
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Return a copy of the model's `attributes` object.
     toJSON: function(options) {
       return _.clone(this.attributes);
     },
-<<<<<<< HEAD
- 
-    // Proxy `Backbone.sync` by default.
-    sync: function() {
-      return Backbone.sync.apply(this, arguments);
-    },
- 
-=======
 
     // Proxy `Backbone.sync` by default -- but override this if you need
     // custom syncing semantics for *this* particular model.
@@ -517,41 +289,21 @@
       return Backbone.sync.apply(this, arguments);
     },
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Get the value of an attribute.
     get: function(attr) {
       return this.attributes[attr];
     },
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Get the HTML-escaped value of an attribute.
     escape: function(attr) {
       return _.escape(this.get(attr));
     },
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Returns `true` if the attribute contains a value that is not null
     // or undefined.
     has: function(attr) {
       return this.get(attr) != null;
     },
-<<<<<<< HEAD
- 
-    // ----------------------------------------------------------------------
- 
-    // Set a hash of model attributes on the object, firing `"change"` unless
-    // you choose to silence it.
-    set: function(key, val, options) {
-      var attr, attrs, unset, changes, silent, changing, prev, current;
-      if (key == null) return this;
- 
-=======
 
     // Set a hash of model attributes on the object, firing `"change"`. This is
     // the core primitive operation of a model, updating the data and notifying
@@ -560,7 +312,6 @@
       var attr, attrs, unset, changes, silent, changing, prev, current;
       if (key == null) return this;
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
       // Handle both `"key", value` and `{key: value}` -style arguments.
       if (typeof key === 'object') {
         attrs = key;
@@ -568,48 +319,28 @@
       } else {
         (attrs = {})[key] = val;
       }
-<<<<<<< HEAD
- 
-      options || (options = {});
- 
-      // Run validation.
-      if (!this._validate(attrs, options)) return false;
- 
-=======
 
       options || (options = {});
 
       // Run validation.
       if (!this._validate(attrs, options)) return false;
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
       // Extract attributes and options.
       unset           = options.unset;
       silent          = options.silent;
       changes         = [];
       changing        = this._changing;
       this._changing  = true;
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
       if (!changing) {
         this._previousAttributes = _.clone(this.attributes);
         this.changed = {};
       }
       current = this.attributes, prev = this._previousAttributes;
-<<<<<<< HEAD
- 
-      // Check for changes of `id`.
-      if (this.idAttribute in attrs) this.id = attrs[this.idAttribute];
- 
-=======
 
       // Check for changes of `id`.
       if (this.idAttribute in attrs) this.id = attrs[this.idAttribute];
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
       // For each `set` attribute, update or delete the current value.
       for (attr in attrs) {
         val = attrs[attr];
@@ -621,11 +352,7 @@
         }
         unset ? delete current[attr] : current[attr] = val;
       }
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
       // Trigger all relevant attribute changes.
       if (!silent) {
         if (changes.length) this._pending = true;
@@ -633,13 +360,9 @@
           this.trigger('change:' + changes[i], this, current[changes[i]], options);
         }
       }
-<<<<<<< HEAD
- 
-=======
 
       // You might be wondering why there's a `while` loop here. Changes can
       // be recursively nested within `"change"` events.
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
       if (changing) return this;
       if (!silent) {
         while (this._pending) {
@@ -651,17 +374,6 @@
       this._changing = false;
       return this;
     },
-<<<<<<< HEAD
- 
-    // Remove an attribute from the model, firing `"change"` unless you choose
-    // to silence it. `unset` is a noop if the attribute doesn't exist.
-    unset: function(attr, options) {
-      return this.set(attr, void 0, _.extend({}, options, {unset: true}));
-    },
- 
-    // Clear all attributes on the model, firing `"change"` unless you choose
-    // to silence it.
-=======
 
     // Remove an attribute from the model, firing `"change"`. `unset` is a noop
     // if the attribute doesn't exist.
@@ -670,28 +382,19 @@
     },
 
     // Clear all attributes on the model, firing `"change"`.
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     clear: function(options) {
       var attrs = {};
       for (var key in this.attributes) attrs[key] = void 0;
       return this.set(attrs, _.extend({}, options, {unset: true}));
     },
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Determine if the model has changed since the last `"change"` event.
     // If you specify an attribute name, determine if that attribute has changed.
     hasChanged: function(attr) {
       if (attr == null) return !_.isEmpty(this.changed);
       return _.has(this.changed, attr);
     },
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Return an object containing all the attributes that have changed, or
     // false if there are no changed attributes. Useful for determining what
     // parts of a view need to be updated and/or what attributes need to be
@@ -708,52 +411,26 @@
       }
       return changed;
     },
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Get the previous value of an attribute, recorded at the time the last
     // `"change"` event was fired.
     previous: function(attr) {
       if (attr == null || !this._previousAttributes) return null;
       return this._previousAttributes[attr];
     },
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Get all of the attributes of the model at the time of the previous
     // `"change"` event.
     previousAttributes: function() {
       return _.clone(this._previousAttributes);
     },
-<<<<<<< HEAD
- 
-    // ---------------------------------------------------------------------
- 
-    // Fetch the model from the server. If the server's representation of the
-    // model differs from its current attributes, they will be overriden,
-=======
 
     // Fetch the model from the server. If the server's representation of the
     // model differs from its current attributes, they will be overridden,
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // triggering a `"change"` event.
     fetch: function(options) {
       options = options ? _.clone(options) : {};
       if (options.parse === void 0) options.parse = true;
-<<<<<<< HEAD
-      var success = options.success;
-      options.success = function(model, resp, options) {
-        if (!model.set(model.parse(resp, options), options)) return false;
-        if (success) success(model, resp, options);
-      };
-      return this.sync('read', this, options);
-    },
- 
-=======
       var model = this;
       var success = options.success;
       options.success = function(resp) {
@@ -765,18 +442,12 @@
       return this.sync('read', this, options);
     },
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Set a hash of model attributes, and sync the model to the server.
     // If the server returns an attributes hash that differs, the model's
     // state will be `set` again.
     save: function(key, val, options) {
-<<<<<<< HEAD
-      var attrs, success, method, xhr, attributes = this.attributes;
- 
-=======
       var attrs, method, xhr, attributes = this.attributes;
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
       // Handle both `"key", value` and `{key: value}` -style arguments.
       if (key == null || typeof key === 'object') {
         attrs = key;
@@ -784,42 +455,19 @@
       } else {
         (attrs = {})[key] = val;
       }
-<<<<<<< HEAD
- 
+
       // If we're not waiting and attributes exist, save acts as `set(attr).save(null, opts)`.
       if (attrs && (!options || !options.wait) && !this.set(attrs, options)) return false;
- 
+
       options = _.extend({validate: true}, options);
- 
+
       // Do not persist invalid models.
       if (!this._validate(attrs, options)) return false;
- 
-=======
 
-      options = _.extend({validate: true}, options);
-
-      // If we're not waiting and attributes exist, save acts as
-      // `set(attr).save(null, opts)` with validation. Otherwise, check if
-      // the model will be valid when the attributes, if any, are set.
-      if (attrs && !options.wait) {
-        if (!this.set(attrs, options)) return false;
-      } else {
-        if (!this._validate(attrs, options)) return false;
-      }
-
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
       // Set temporary attributes if `{wait: true}`.
       if (attrs && options.wait) {
         this.attributes = _.extend({}, attributes, attrs);
       }
-<<<<<<< HEAD
- 
-      // After a successful server-side save, the client is (optionally)
-      // updated with the server-side state.
-      if (options.parse === void 0) options.parse = true;
-      success = options.success;
-      options.success = function(model, resp, options) {
-=======
 
       // After a successful server-side save, the client is (optionally)
       // updated with the server-side state.
@@ -827,7 +475,6 @@
       var model = this;
       var success = options.success;
       options.success = function(resp) {
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
         // Ensure attributes are restored during synchronous saves.
         model.attributes = attributes;
         var serverAttrs = model.parse(resp, options);
@@ -836,21 +483,6 @@
           return false;
         }
         if (success) success(model, resp, options);
-<<<<<<< HEAD
-      };
- 
-      // Finish configuring and sending the Ajax request.
-      method = this.isNew() ? 'create' : (options.patch ? 'patch' : 'update');
-      if (method === 'patch') options.attrs = attrs;
-      xhr = this.sync(method, this, options);
- 
-      // Restore attributes.
-      if (attrs && options.wait) this.attributes = attributes;
- 
-      return xhr;
-    },
- 
-=======
         model.trigger('sync', model, resp, options);
       };
       wrapError(this, options);
@@ -865,7 +497,6 @@
       return xhr;
     },
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Destroy this model on the server if it was already persisted.
     // Optimistically removes the model from its collection, if it has one.
     // If `wait: true` is passed, waits for the server to respond before removal.
@@ -873,23 +504,6 @@
       options = options ? _.clone(options) : {};
       var model = this;
       var success = options.success;
-<<<<<<< HEAD
- 
-      var destroy = function() {
-        model.trigger('destroy', model, model.collection, options);
-      };
- 
-      options.success = function(model, resp, options) {
-        if (options.wait || model.isNew()) destroy();
-        if (success) success(model, resp, options);
-      };
- 
-      if (this.isNew()) {
-        options.success(this, null, options);
-        return false;
-      }
- 
-=======
 
       var destroy = function() {
         model.trigger('destroy', model, model.collection, options);
@@ -907,16 +521,11 @@
       }
       wrapError(this, options);
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
       var xhr = this.sync('delete', this, options);
       if (!options.wait) destroy();
       return xhr;
     },
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Default URL for the model's representation on the server -- if you're
     // using Backbone's restful methods, override this to change the endpoint
     // that will be called.
@@ -925,45 +534,22 @@
       if (this.isNew()) return base;
       return base + (base.charAt(base.length - 1) === '/' ? '' : '/') + encodeURIComponent(this.id);
     },
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // **parse** converts a response into the hash of attributes to be `set` on
     // the model. The default implementation is just to pass the response along.
     parse: function(resp, options) {
       return resp;
     },
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Create a new model with identical attributes to this one.
     clone: function() {
       return new this.constructor(this.attributes);
     },
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // A model is new if it has never been saved to the server, and lacks an id.
     isNew: function() {
       return this.id == null;
     },
-<<<<<<< HEAD
- 
-    // Check if the model is currently in a valid state.
-    isValid: function(options) {
-      return !this.validate || !this.validate(this.attributes, options);
-    },
- 
-    // Run validation against the next complete set of model attributes,
-    // returning `true` if all is well. Otherwise, fire a general
-    // `"error"` event and call the error callback, if specified.
-=======
 
     // Check if the model is currently in a valid state.
     isValid: function(options) {
@@ -972,25 +558,11 @@
 
     // Run validation against the next complete set of model attributes,
     // returning `true` if all is well. Otherwise, fire an `"invalid"` event.
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     _validate: function(attrs, options) {
       if (!options.validate || !this.validate) return true;
       attrs = _.extend({}, this.attributes, attrs);
       var error = this.validationError = this.validate(attrs, options) || null;
       if (!error) return true;
-<<<<<<< HEAD
-      this.trigger('invalid', this, error, options || {});
-      return false;
-    }
- 
-  });
- 
-  // Backbone.Collection
-  // -------------------
- 
-  // Provides a standard collection class for our sets of models, ordered
-  // or unordered. If a `comparator` is specified, the Collection will maintain
-=======
       this.trigger('invalid', this, error, _.extend(options || {}, {validationError: error}));
       return false;
     }
@@ -1021,34 +593,16 @@
 
   // Create a new **Collection**, perhaps to contain a specific type of `model`.
   // If a `comparator` is specified, the Collection will maintain
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
   // its models in sort order, as they're added and removed.
   var Collection = Backbone.Collection = function(models, options) {
     options || (options = {});
+    if (options.url) this.url = options.url;
     if (options.model) this.model = options.model;
     if (options.comparator !== void 0) this.comparator = options.comparator;
-<<<<<<< HEAD
-    this.models = [];
-=======
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     this._reset();
     this.initialize.apply(this, arguments);
     if (models) this.reset(models, _.extend({silent: true}, options));
   };
-<<<<<<< HEAD
- 
-  // Define the Collection's inheritable methods.
-  _.extend(Collection.prototype, Events, {
- 
-    // The default model for a collection is just a **Backbone.Model**.
-    // This should be overridden in most cases.
-    model: Model,
- 
-    // Initialize is an empty function by default. Override it with your own
-    // initialization logic.
-    initialize: function(){},
- 
-=======
 
   // Default options for `Collection#set`.
   var setOptions = {add: true, remove: true, merge: true};
@@ -1065,111 +619,16 @@
     // initialization logic.
     initialize: function(){},
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // The JSON representation of a Collection is an array of the
     // models' attributes.
     toJSON: function(options) {
       return this.map(function(model){ return model.toJSON(options); });
     },
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Proxy `Backbone.sync` by default.
     sync: function() {
       return Backbone.sync.apply(this, arguments);
     },
-<<<<<<< HEAD
- 
-    // Add a model, or list of models to the set.
-    add: function(models, options) {
-      models = _.isArray(models) ? models.slice() : [models];
-      options || (options = {});
-      var i, l, model, attrs, existing, doSort, add, at, sort, sortAttr;
-      add = [];
-      at = options.at;
-      sort = this.comparator && (at == null) && options.sort != false;
-      sortAttr = _.isString(this.comparator) ? this.comparator : null;
- 
-      // Turn bare objects into model references, and prevent invalid models
-      // from being added.
-      for (i = 0, l = models.length; i < l; i++) {
-        if (!(model = this._prepareModel(attrs = models[i], options))) {
-          this.trigger('invalid', this, attrs, options);
-          continue;
-        }
- 
-        // If a duplicate is found, prevent it from being added and
-        // optionally merge it into the existing model.
-        if (existing = this.get(model)) {
-          if (options.merge) {
-            existing.set(attrs === model ? model.attributes : attrs, options);
-            if (sort && !doSort && existing.hasChanged(sortAttr)) doSort = true;
-          }
-          continue;
-        }
- 
-        // This is a new model, push it to the `add` list.
-        add.push(model);
- 
-        // Listen to added models' events, and index models for lookup by
-        // `id` and by `cid`.
-        model.on('all', this._onModelEvent, this);
-        this._byId[model.cid] = model;
-        if (model.id != null) this._byId[model.id] = model;
-      }
- 
-      // See if sorting is needed, update `length` and splice in new models.
-      if (add.length) {
-        if (sort) doSort = true;
-        this.length += add.length;
-        if (at != null) {
-          splice.apply(this.models, [at, 0].concat(add));
-        } else {
-          push.apply(this.models, add);
-        }
-      }
- 
-      // Silently sort the collection if appropriate.
-      if (doSort) this.sort({silent: true});
- 
-      if (options.silent) return this;
- 
-      // Trigger `add` events.
-      for (i = 0, l = add.length; i < l; i++) {
-        (model = add[i]).trigger('add', model, this, options);
-      }
- 
-      // Trigger `sort` if the collection was sorted.
-      if (doSort) this.trigger('sort', this, options);
- 
-      return this;
-    },
- 
-    // Remove a model, or a list of models from the set.
-    remove: function(models, options) {
-      models = _.isArray(models) ? models.slice() : [models];
-      options || (options = {});
-      var i, l, index, model;
-      for (i = 0, l = models.length; i < l; i++) {
-        model = this.get(models[i]);
-        if (!model) continue;
-        delete this._byId[model.id];
-        delete this._byId[model.cid];
-        index = this.indexOf(model);
-        this.models.splice(index, 1);
-        this.length--;
-        if (!options.silent) {
-          options.index = index;
-          model.trigger('remove', model, this, options);
-        }
-        this._removeReference(model);
-      }
-      return this;
-    },
- 
-=======
 
     // Add a model, or list of models to the set.
     add: function(models, options) {
@@ -1211,8 +670,6 @@
       var sortable = this.comparator && (at == null) && options.sort !== false;
       var sortAttr = _.isString(this.comparator) ? this.comparator : null;
       var toAdd = [], toRemove = [], modelMap = {};
-      var add = options.add, merge = options.merge, remove = options.remove;
-      var order = !sortable && add && remove ? [] : false;
 
       // Turn bare objects into model references, and prevent invalid models
       // from being added.
@@ -1222,14 +679,14 @@
         // If a duplicate is found, prevent it from being added and
         // optionally merge it into the existing model.
         if (existing = this.get(model)) {
-          if (remove) modelMap[existing.cid] = true;
-          if (merge) {
+          if (options.remove) modelMap[existing.cid] = true;
+          if (options.merge) {
             existing.set(model.attributes, options);
             if (sortable && !sort && existing.hasChanged(sortAttr)) sort = true;
           }
 
         // This is a new model, push it to the `toAdd` list.
-        } else if (add) {
+        } else if (options.add) {
           toAdd.push(model);
 
           // Listen to added models' events, and index models for lookup by
@@ -1238,11 +695,10 @@
           this._byId[model.cid] = model;
           if (model.id != null) this._byId[model.id] = model;
         }
-        if (order) order.push(existing || model);
       }
 
       // Remove nonexistent models if appropriate.
-      if (remove) {
+      if (options.remove) {
         for (i = 0, l = this.length; i < l; ++i) {
           if (!modelMap[(model = this.models[i]).cid]) toRemove.push(model);
         }
@@ -1250,14 +706,13 @@
       }
 
       // See if sorting is needed, update `length` and splice in new models.
-      if (toAdd.length || (order && order.length)) {
+      if (toAdd.length) {
         if (sortable) sort = true;
         this.length += toAdd.length;
         if (at != null) {
           splice.apply(this.models, [at, 0].concat(toAdd));
         } else {
-          if (order) this.models.length = 0;
-          push.apply(this.models, order || toAdd);
+          push.apply(this.models, toAdd);
         }
       }
 
@@ -1272,7 +727,7 @@
       }
 
       // Trigger `sort` if the collection was sorted.
-      if (sort || (order && order.length)) this.trigger('sort', this, options);
+      if (sort) this.trigger('sort', this, options);
       return this;
     },
 
@@ -1292,65 +747,37 @@
       return this;
     },
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Add a model to the end of the collection.
     push: function(model, options) {
       model = this._prepareModel(model, options);
       this.add(model, _.extend({at: this.length}, options));
       return model;
     },
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Remove a model from the end of the collection.
     pop: function(options) {
       var model = this.at(this.length - 1);
       this.remove(model, options);
       return model;
     },
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Add a model to the beginning of the collection.
     unshift: function(model, options) {
       model = this._prepareModel(model, options);
       this.add(model, _.extend({at: 0}, options));
       return model;
     },
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Remove a model from the beginning of the collection.
     shift: function(options) {
       var model = this.at(0);
       this.remove(model, options);
       return model;
     },
-<<<<<<< HEAD
- 
+
     // Slice out a sub-array of models from the collection.
     slice: function(begin, end) {
       return this.models.slice(begin, end);
-    },
- 
-    // Get a model from the set by id.
-    get: function(obj) {
-      if (obj == null) return void 0;
-      this._idAttr || (this._idAttr = this.model.prototype.idAttribute);
-      return this._byId[obj.id || obj.cid || obj[this._idAttr] || obj];
-    },
- 
-=======
-
-    // Slice out a sub-array of models from the collection.
-    slice: function() {
-      return slice.apply(this.models, arguments);
     },
 
     // Get a model from the set by id.
@@ -1359,34 +786,22 @@
       return this._byId[obj.id != null ? obj.id : obj.cid || obj];
     },
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Get the model at the given index.
     at: function(index) {
       return this.models[index];
     },
-<<<<<<< HEAD
- 
-    // Return models with matching attributes. Useful for simple cases of `filter`.
-    where: function(attrs) {
-      if (_.isEmpty(attrs)) return [];
-      return this.filter(function(model) {
-=======
 
     // Return models with matching attributes. Useful for simple cases of
     // `filter`.
     where: function(attrs, first) {
       if (_.isEmpty(attrs)) return first ? void 0 : [];
       return this[first ? 'find' : 'filter'](function(model) {
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
         for (var key in attrs) {
           if (attrs[key] !== model.get(key)) return false;
         }
         return true;
       });
     },
-<<<<<<< HEAD
- 
-=======
 
     // Return the first model with matching attributes. Useful for simple cases
     // of `find`.
@@ -1394,35 +809,19 @@
       return this.where(attrs, true);
     },
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Force the collection to re-sort itself. You don't need to call this under
     // normal circumstances, as the set will maintain sort order as each item
     // is added.
     sort: function(options) {
-<<<<<<< HEAD
-      if (!this.comparator) {
-        throw new Error('Cannot sort a set without a comparator');
-      }
-      options || (options = {});
- 
-=======
       if (!this.comparator) throw new Error('Cannot sort a set without a comparator');
       options || (options = {});
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
       // Run sort based on type of `comparator`.
       if (_.isString(this.comparator) || this.comparator.length === 1) {
         this.models = this.sortBy(this.comparator, this);
       } else {
         this.models.sort(_.bind(this.comparator, this));
       }
-<<<<<<< HEAD
- 
-      if (!options.silent) this.trigger('sort', this, options);
-      return this;
-    },
- 
-=======
 
       if (!options.silent) this.trigger('sort', this, options);
       return this;
@@ -1438,88 +837,18 @@
       return _.sortedIndex(this.models, model, iterator, context);
     },
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Pluck an attribute from each model in the collection.
     pluck: function(attr) {
       return _.invoke(this.models, 'get', attr);
     },
-<<<<<<< HEAD
- 
-    // Smartly update a collection with a change set of models, adding,
-    // removing, and merging as necessary.
-    update: function(models, options) {
-      options = _.extend({add: true, merge: true, remove: true}, options);
-      if (options.parse) models = this.parse(models, options);
-      var model, i, l, existing;
-      var add = [], remove = [], modelMap = {};
- 
-      // Allow a single model (or no argument) to be passed.
-      if (!_.isArray(models)) models = models ? [models] : [];
- 
-      // Proxy to `add` for this case, no need to iterate...
-      if (options.add && !options.remove) return this.add(models, options);
- 
-      // Determine which models to add and merge, and which to remove.
-      for (i = 0, l = models.length; i < l; i++) {
-        model = models[i];
-        existing = this.get(model);
-        if (options.remove && existing) modelMap[existing.cid] = true;
-        if ((options.add && !existing) || (options.merge && existing)) {
-          add.push(model);
-        }
-      }
-      if (options.remove) {
-        for (i = 0, l = this.models.length; i < l; i++) {
-          model = this.models[i];
-          if (!modelMap[model.cid]) remove.push(model);
-        }
-      }
- 
-      // Remove models (if applicable) before we add and merge the rest.
-      if (remove.length) this.remove(remove, options);
-      if (add.length) this.add(add, options);
-      return this;
-    },
- 
-    // When you have more items than you want to add or remove individually,
-    // you can reset the entire set with a new list of models, without firing
-    // any `add` or `remove` events. Fires `reset` when finished.
-    reset: function(models, options) {
-      options || (options = {});
-      if (options.parse) models = this.parse(models, options);
-      for (var i = 0, l = this.models.length; i < l; i++) {
-        this._removeReference(this.models[i]);
-      }
-      options.previousModels = this.models.slice();
-      this._reset();
-      if (models) this.add(models, _.extend({silent: true}, options));
-      if (!options.silent) this.trigger('reset', this, options);
-      return this;
-    },
- 
-    // Fetch the default set of models for this collection, resetting the
-    // collection when they arrive. If `update: true` is passed, the response
-    // data will be passed through the `update` method instead of `reset`.
-=======
 
     // Fetch the default set of models for this collection, resetting the
     // collection when they arrive. If `reset: true` is passed, the response
     // data will be passed through the `reset` method instead of `set`.
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     fetch: function(options) {
       options = options ? _.clone(options) : {};
       if (options.parse === void 0) options.parse = true;
       var success = options.success;
-<<<<<<< HEAD
-      options.success = function(collection, resp, options) {
-        var method = options.update ? 'update' : 'reset';
-        collection[method](resp, options);
-        if (success) success(collection, resp, options);
-      };
-      return this.sync('read', this, options);
-    },
- 
-=======
       var collection = this;
       options.success = function(resp) {
         var method = options.reset ? 'reset' : 'set';
@@ -1531,7 +860,6 @@
       return this.sync('read', this, options);
     },
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Create a new instance of a model in this collection. Add the model to the
     // collection immediately, unless `wait: true` is passed, in which case we
     // wait for the server to agree.
@@ -1541,47 +869,24 @@
       if (!options.wait) this.add(model, options);
       var collection = this;
       var success = options.success;
-<<<<<<< HEAD
-      options.success = function(model, resp, options) {
-=======
       options.success = function(resp) {
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
         if (options.wait) collection.add(model, options);
         if (success) success(model, resp, options);
       };
       model.save(null, options);
       return model;
     },
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // **parse** converts a response into a list of models to be added to the
     // collection. The default implementation is just to pass it through.
     parse: function(resp, options) {
       return resp;
     },
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Create a new collection with an identical list of models as this one.
     clone: function() {
       return new this.constructor(this.models);
     },
-<<<<<<< HEAD
- 
-    // Reset all internal state. Called when the collection is reset.
-    _reset: function() {
-      this.length = 0;
-      this.models.length = 0;
-      this._byId  = {};
-    },
- 
-    // Prepare a model or hash of attributes to be added to this collection.
-=======
 
     // Private method to reset all internal state. Called when the collection
     // is first initialized or reset.
@@ -1593,7 +898,6 @@
 
     // Prepare a hash of attributes (or other model) to be added to this
     // collection.
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     _prepareModel: function(attrs, options) {
       if (attrs instanceof Model) {
         if (!attrs.collection) attrs.collection = this;
@@ -1602,13 +906,6 @@
       options || (options = {});
       options.collection = this;
       var model = new this.model(attrs, options);
-<<<<<<< HEAD
-      if (!model._validate(attrs, options)) return false;
-      return model;
-    },
- 
-    // Internal method to remove a model's ties to a collection.
-=======
       if (!model._validate(attrs, options)) {
         this.trigger('invalid', this, attrs, options);
         return false;
@@ -1617,16 +914,11 @@
     },
 
     // Internal method to sever a model's ties to a collection.
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     _removeReference: function(model) {
       if (this === model.collection) delete model.collection;
       model.off('all', this._onModelEvent, this);
     },
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Internal method called every time a model in the set fires an event.
     // Sets need to update their indexes when models change ids. All other
     // events simply proxy through. "add" and "remove" events that originate
@@ -1639,21 +931,6 @@
         if (model.id != null) this._byId[model.id] = model;
       }
       this.trigger.apply(this, arguments);
-<<<<<<< HEAD
-    },
- 
-    sortedIndex: function (model, value, context) {
-      value || (value = this.comparator);
-      var iterator = _.isFunction(value) ? value : function(model) {
-        return model.get(value);
-      };
-      return _.sortedIndex(this.models, model, iterator, context);
-    }
- 
-  });
- 
-  // Underscore methods that we want to implement on the Collection.
-=======
     }
 
   });
@@ -1661,18 +938,13 @@
   // Underscore methods that we want to implement on the Collection.
   // 90% of the core usefulness of Backbone Collections is actually implemented
   // right here:
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
   var methods = ['forEach', 'each', 'map', 'collect', 'reduce', 'foldl',
     'inject', 'reduceRight', 'foldr', 'find', 'detect', 'filter', 'select',
     'reject', 'every', 'all', 'some', 'any', 'include', 'contains', 'invoke',
     'max', 'min', 'toArray', 'size', 'first', 'head', 'take', 'initial', 'rest',
     'tail', 'drop', 'last', 'without', 'indexOf', 'shuffle', 'lastIndexOf',
     'isEmpty', 'chain'];
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
   // Mix in each Underscore method as a proxy to `Collection#models`.
   _.each(methods, function(method) {
     Collection.prototype[method] = function() {
@@ -1681,17 +953,10 @@
       return _[method].apply(_, args);
     };
   });
-<<<<<<< HEAD
- 
-  // Underscore methods that take a property name as an argument.
-  var attributeMethods = ['groupBy', 'countBy', 'sortBy'];
- 
-=======
 
   // Underscore methods that take a property name as an argument.
   var attributeMethods = ['groupBy', 'countBy', 'sortBy'];
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
   // Use attributes instead of properties.
   _.each(attributeMethods, function(method) {
     Collection.prototype[method] = function(value, context) {
@@ -1701,102 +966,6 @@
       return _[method](this.models, iterator, context);
     };
   });
-<<<<<<< HEAD
- 
-  // Backbone.Router
-  // ---------------
- 
-  // Routers map faux-URLs to actions, and fire events when routes are
-  // matched. Creating a new one sets its `routes` hash, if not set statically.
-  var Router = Backbone.Router = function(options) {
-    options || (options = {});
-    if (options.routes) this.routes = options.routes;
-    this._bindRoutes();
-    this.initialize.apply(this, arguments);
-  };
- 
-  // Cached regular expressions for matching named param parts and splatted
-  // parts of route strings.
-  var optionalParam = /\((.*?)\)/g;
-  var namedParam    = /(\(\?)?:\w+/g;
-  var splatParam    = /\*\w+/g;
-  var escapeRegExp  = /[\-{}\[\]+?.,\\\^$|#\s]/g;
- 
-  // Set up all inheritable **Backbone.Router** properties and methods.
-  _.extend(Router.prototype, Events, {
- 
-    // Initialize is an empty function by default. Override it with your own
-    // initialization logic.
-    initialize: function(){},
- 
-    // Manually bind a single named route to a callback. For example:
-    //
-    //     this.route('search/:query/p:num', 'search', function(query, num) {
-    //       ...
-    //     });
-    //
-    route: function(route, name, callback) {
-      if (!_.isRegExp(route)) route = this._routeToRegExp(route);
-      if (!callback) callback = this[name];
-      Backbone.history.route(route, _.bind(function(fragment) {
-        var args = this._extractParameters(route, fragment);
-        callback && callback.apply(this, args);
-        this.trigger.apply(this, ['route:' + name].concat(args));
-        this.trigger('route', name, args);
-        Backbone.history.trigger('route', this, name, args);
-      }, this));
-      return this;
-    },
- 
-    // Simple proxy to `Backbone.history` to save a fragment into the history.
-    navigate: function(fragment, options) {
-      Backbone.history.navigate(fragment, options);
-      return this;
-    },
- 
-    // Bind all defined routes to `Backbone.history`. We have to reverse the
-    // order of the routes here to support behavior where the most general
-    // routes can be defined at the bottom of the route map.
-    _bindRoutes: function() {
-      if (!this.routes) return;
-      var route, routes = _.keys(this.routes);
-      while ((route = routes.pop()) != null) {
-        this.route(route, this.routes[route]);
-      }
-    },
- 
-    // Convert a route string into a regular expression, suitable for matching
-    // against the current location hash.
-    _routeToRegExp: function(route) {
-      route = route.replace(escapeRegExp, '\\$&')
-                   .replace(optionalParam, '(?:$1)?')
-                   .replace(namedParam, function(match, optional){
-                     return optional ? match : '([^\/]+)';
-                   })
-                   .replace(splatParam, '(.*?)');
-      return new RegExp('^' + route + '$');
-    },
- 
-    // Given a route, and a URL fragment that it matches, return the array of
-    // extracted parameters.
-    _extractParameters: function(route, fragment) {
-      return route.exec(fragment).slice(1);
-    }
- 
-  });
- 
-  // Backbone.History
-  // ----------------
- 
-  // Handles cross-browser history management, based on URL fragments. If the
-  // browser does not support `onhashchange`, falls back to polling.
-  var History = Backbone.History = function() {
-    this.handlers = [];
-    _.bindAll(this, 'checkUrl');
- 
-    // Ensure that `History` can be used outside of the browser.
-    if (typeof window !== 'undefined') {
-=======
 
   // Backbone.View
   // -------------
@@ -1809,16 +978,11 @@
   // having to worry about render order ... and makes it easy for the view to
   // react to specific changes in the state of your models.
 
-  // Options with special meaning *(e.g. model, collection, id, className)* are
-  // attached directly to the view.  See `viewOptions` for an exhaustive
-  // list.
-
   // Creating a Backbone.View creates its initial element outside of the DOM,
   // if an existing element is not provided...
   var View = Backbone.View = function(options) {
     this.cid = _.uniqueId('view');
-    options || (options = {});
-    _.extend(this, _.pick(options, viewOptions));
+    this._configure(options || {});
     this._ensureElement();
     this.initialize.apply(this, arguments);
     this.delegateEvents();
@@ -1913,6 +1077,16 @@
     undelegateEvents: function() {
       this.$el.off('.delegateEvents' + this.cid);
       return this;
+    },
+
+    // Performs the initial configuration of a View with a set of options.
+    // Keys with special meaning *(e.g. model, collection, id, className)* are
+    // attached directly to the view.  See `viewOptions` for an exhaustive
+    // list.
+    _configure: function(options) {
+      if (this.options) options = _.extend({}, _.result(this, 'options'), options);
+      _.extend(this, _.pick(options, viewOptions));
+      this.options = options;
     },
 
     // Ensure that the View has a DOM element to render into.
@@ -2134,36 +1308,10 @@
 
     // Ensure that `History` can be used outside of the browser.
     if (typeof window !== 'undefined') {
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
       this.location = window.location;
       this.history = window.history;
     }
   };
-<<<<<<< HEAD
- 
-  // Cached regex for stripping a leading hash/slash and trailing space.
-  var routeStripper = /^[#\/]|\s+$/g;
- 
-  // Cached regex for stripping leading and trailing slashes.
-  var rootStripper = /^\/+|\/+$/g;
- 
-  // Cached regex for detecting MSIE.
-  var isExplorer = /msie [\w.]+/;
- 
-  // Cached regex for removing a trailing slash.
-  var trailingSlash = /\/$/;
- 
-  // Has the history handling already been started?
-  History.started = false;
- 
-  // Set up all inheritable **Backbone.History** properties and methods.
-  _.extend(History.prototype, Events, {
- 
-    // The default interval to poll for hash changes, if necessary, is
-    // twenty times a second.
-    interval: 50,
- 
-=======
 
   // Cached regex for stripping a leading hash/slash and trailing space.
   var routeStripper = /^[#\/]|\s+$/g;
@@ -2187,18 +1335,13 @@
     // twenty times a second.
     interval: 50,
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Gets the true hash value. Cannot use location.hash directly due to bug
     // in Firefox where location.hash will always be decoded.
     getHash: function(window) {
       var match = (window || this).location.href.match(/#(.*)$/);
       return match ? match[1] : '';
     },
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Get the cross-browser normalized URL fragment, either from the URL,
     // the hash, or the override.
     getFragment: function(fragment, forcePushState) {
@@ -2213,21 +1356,13 @@
       }
       return fragment.replace(routeStripper, '');
     },
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Start the hash change handling, returning `true` if the current URL matches
     // an existing route, and `false` otherwise.
     start: function(options) {
       if (History.started) throw new Error("Backbone.history has already been started");
       History.started = true;
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
       // Figure out the initial configuration. Do we need an iframe?
       // Is pushState desired ... is it available?
       this.options          = _.extend({}, {root: '/'}, this.options, options);
@@ -2238,26 +1373,15 @@
       var fragment          = this.getFragment();
       var docMode           = document.documentMode;
       var oldIE             = (isExplorer.exec(navigator.userAgent.toLowerCase()) && (!docMode || docMode <= 7));
-<<<<<<< HEAD
- 
-      // Normalize root to always include a leading and trailing slash.
-      this.root = ('/' + this.root + '/').replace(rootStripper, '/');
- 
-=======
 
       // Normalize root to always include a leading and trailing slash.
       this.root = ('/' + this.root + '/').replace(rootStripper, '/');
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
       if (oldIE && this._wantsHashChange) {
         this.iframe = Backbone.$('<iframe src="javascript:0" tabindex="-1" />').hide().appendTo('body')[0].contentWindow;
         this.navigate(fragment);
       }
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
       // Depending on whether we're using pushState or hashes, and whether
       // 'onhashchange' is supported, determine how we check the URL state.
       if (this._hasPushState) {
@@ -2267,21 +1391,13 @@
       } else if (this._wantsHashChange) {
         this._checkUrlInterval = setInterval(this.checkUrl, this.interval);
       }
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
       // Determine if we need to change the base url, for a pushState link
       // opened by a non-pushState browser.
       this.fragment = fragment;
       var loc = this.location;
       var atRoot = loc.pathname.replace(/[^\/]$/, '$&/') === this.root;
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
       // If we've started off with a route from a `pushState`-enabled browser,
       // but we're currently in a browser that doesn't support it...
       if (this._wantsHashChange && this._wantsPushState && !this._hasPushState && !atRoot) {
@@ -2289,28 +1405,17 @@
         this.location.replace(this.root + this.location.search + '#' + this.fragment);
         // Return immediately as browser will do redirect to new url
         return true;
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
       // Or if we've started out with a hash-based route, but we're currently
       // in a browser where it could be `pushState`-based instead...
       } else if (this._wantsPushState && this._hasPushState && atRoot && loc.hash) {
         this.fragment = this.getHash().replace(routeStripper, '');
         this.history.replaceState({}, document.title, this.root + this.fragment + loc.search);
       }
-<<<<<<< HEAD
- 
-      if (!this.options.silent) return this.loadUrl();
-    },
- 
-=======
 
       if (!this.options.silent) return this.loadUrl();
     },
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Disable Backbone.history, perhaps temporarily. Not useful in a real app,
     // but possibly useful for unit testing Routers.
     stop: function() {
@@ -2318,21 +1423,13 @@
       clearInterval(this._checkUrlInterval);
       History.started = false;
     },
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Add a route to be tested when the fragment changes. Routes added later
     // may override previous routes.
     route: function(route, callback) {
       this.handlers.unshift({route: route, callback: callback});
     },
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Checks the current URL to see if it has changed, and if it has,
     // calls `loadUrl`, normalizing across the hidden iframe.
     checkUrl: function(e) {
@@ -2344,11 +1441,7 @@
       if (this.iframe) this.navigate(current);
       this.loadUrl() || this.loadUrl(this.getHash());
     },
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Attempt to load the current URL fragment. If a route succeeds with a
     // match, returns `true`. If no defined routes matches the fragment,
     // returns `false`.
@@ -2362,11 +1455,7 @@
       });
       return matched;
     },
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Save a fragment into the hash history, or replace the URL state if the
     // 'replace' option is passed. You are responsible for properly URL-encoding
     // the fragment in advance.
@@ -2381,19 +1470,11 @@
       if (this.fragment === fragment) return;
       this.fragment = fragment;
       var url = this.root + fragment;
-<<<<<<< HEAD
- 
-      // If pushState is available, we use it to set the fragment as a real URL.
-      if (this._hasPushState) {
-        this.history[options.replace ? 'replaceState' : 'pushState']({}, document.title, url);
- 
-=======
 
       // If pushState is available, we use it to set the fragment as a real URL.
       if (this._hasPushState) {
         this.history[options.replace ? 'replaceState' : 'pushState']({}, document.title, url);
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
       // If hash changes haven't been explicitly disabled, update the hash
       // fragment to store history.
       } else if (this._wantsHashChange) {
@@ -2405,25 +1486,15 @@
           if(!options.replace) this.iframe.document.open().close();
           this._updateHash(this.iframe.location, fragment, options.replace);
         }
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
       // If you've told us that you explicitly don't want fallback hashchange-
       // based history, then `navigate` becomes a page refresh.
       } else {
         return this.location.assign(url);
       }
-<<<<<<< HEAD
       if (options.trigger) this.loadUrl(fragment);
     },
- 
-=======
-      if (options.trigger) return this.loadUrl(fragment);
-    },
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Update the hash location, either replacing the current entry, or adding
     // a new one to the browser history.
     _updateHash: function(location, fragment, replace) {
@@ -2435,241 +1506,6 @@
         location.hash = '#' + fragment;
       }
     }
-<<<<<<< HEAD
- 
-  });
- 
-  // Create the default Backbone.history.
-  Backbone.history = new History;
- 
-  // Backbone.View
-  // -------------
- 
-  // Creating a Backbone.View creates its initial element outside of the DOM,
-  // if an existing element is not provided...
-  var View = Backbone.View = function(options) {
-    this.cid = _.uniqueId('view');
-    this._configure(options || {});
-    this._ensureElement();
-    this.initialize.apply(this, arguments);
-    this.delegateEvents();
-  };
- 
-  // Cached regex to split keys for `delegate`.
-  var delegateEventSplitter = /^(\S+)\s*(.*)$/;
- 
-  // List of view options to be merged as properties.
-  var viewOptions = ['model', 'collection', 'el', 'id', 'attributes', 'className', 'tagName', 'events'];
- 
-  // Set up all inheritable **Backbone.View** properties and methods.
-  _.extend(View.prototype, Events, {
- 
-    // The default `tagName` of a View's element is `"div"`.
-    tagName: 'div',
- 
-    // jQuery delegate for element lookup, scoped to DOM elements within the
-    // current view. This should be prefered to global lookups where possible.
-    $: function(selector) {
-      return this.$el.find(selector);
-    },
- 
-    // Initialize is an empty function by default. Override it with your own
-    // initialization logic.
-    initialize: function(){},
- 
-    // **render** is the core function that your view should override, in order
-    // to populate its element (`this.el`), with the appropriate HTML. The
-    // convention is for **render** to always return `this`.
-    render: function() {
-      return this;
-    },
- 
-    // Remove this view by taking the element out of the DOM, and removing any
-    // applicable Backbone.Events listeners.
-    remove: function() {
-      this.$el.remove();
-      this.stopListening();
-      return this;
-    },
- 
-    // Change the view's element (`this.el` property), including event
-    // re-delegation.
-    setElement: function(element, delegate) {
-      if (this.$el) this.undelegateEvents();
-      this.$el = element instanceof Backbone.$ ? element : Backbone.$(element);
-      this.el = this.$el[0];
-      if (delegate !== false) this.delegateEvents();
-      return this;
-    },
- 
-    // Set callbacks, where `this.events` is a hash of
-    //
-    // *{"event selector": "callback"}*
-    //
-    //     {
-    //       'mousedown .title':  'edit',
-    //       'click .button':     'save'
-    //       'click .open':       function(e) { ... }
-    //     }
-    //
-    // pairs. Callbacks will be bound to the view, with `this` set properly.
-    // Uses event delegation for efficiency.
-    // Omitting the selector binds the event to `this.el`.
-    // This only works for delegate-able events: not `focus`, `blur`, and
-    // not `change`, `submit`, and `reset` in Internet Explorer.
-    delegateEvents: function(events) {
-      if (!(events || (events = _.result(this, 'events')))) return;
-      this.undelegateEvents();
-      for (var key in events) {
-        var method = events[key];
-        if (!_.isFunction(method)) method = this[events[key]];
-        if (!method) throw new Error('Method "' + events[key] + '" does not exist');
-        var match = key.match(delegateEventSplitter);
-        var eventName = match[1], selector = match[2];
-        method = _.bind(method, this);
-        eventName += '.delegateEvents' + this.cid;
-        if (selector === '') {
-          this.$el.on(eventName, method);
-        } else {
-          this.$el.on(eventName, selector, method);
-        }
-      }
-    },
- 
-    // Clears all callbacks previously bound to the view with `delegateEvents`.
-    // You usually don't need to use this, but may wish to if you have multiple
-    // Backbone views attached to the same DOM element.
-    undelegateEvents: function() {
-      this.$el.off('.delegateEvents' + this.cid);
-    },
- 
-    // Performs the initial configuration of a View with a set of options.
-    // Keys with special meaning *(model, collection, id, className)*, are
-    // attached directly to the view.
-    _configure: function(options) {
-      if (this.options) options = _.extend({}, _.result(this, 'options'), options);
-      _.extend(this, _.pick(options, viewOptions));
-      this.options = options;
-    },
- 
-    // Ensure that the View has a DOM element to render into.
-    // If `this.el` is a string, pass it through `$()`, take the first
-    // matching element, and re-assign it to `el`. Otherwise, create
-    // an element from the `id`, `className` and `tagName` properties.
-    _ensureElement: function() {
-      if (!this.el) {
-        var attrs = _.extend({}, _.result(this, 'attributes'));
-        if (this.id) attrs.id = _.result(this, 'id');
-        if (this.className) attrs['class'] = _.result(this, 'className');
-        var $el = Backbone.$('<' + _.result(this, 'tagName') + '>').attr(attrs);
-        this.setElement($el, false);
-      } else {
-        this.setElement(_.result(this, 'el'), false);
-      }
-    }
- 
-  });
- 
-  // Backbone.sync
-  // -------------
- 
-  // Map from CRUD to HTTP for our default `Backbone.sync` implementation.
-  var methodMap = {
-    'create': 'POST',
-    'update': 'PUT',
-    'patch':  'PATCH',
-    'delete': 'DELETE',
-    'read':   'GET'
-  };
- 
-  // Override this function to change the manner in which Backbone persists
-  // models to the server. You will be passed the type of request, and the
-  // model in question. By default, makes a RESTful Ajax request
-  // to the model's `url()`. Some possible customizations could be:
-  //
-  // * Use `setTimeout` to batch rapid-fire updates into a single request.
-  // * Send up the models as XML instead of JSON.
-  // * Persist models via WebSockets instead of Ajax.
-  //
-  // Turn on `Backbone.emulateHTTP` in order to send `PUT` and `DELETE` requests
-  // as `POST`, with a `_method` parameter containing the true HTTP method,
-  // as well as all requests with the body as `application/x-www-form-urlencoded`
-  // instead of `application/json` with the model in a param named `model`.
-  // Useful when interfacing with server-side languages like **PHP** that make
-  // it difficult to read the body of `PUT` requests.
-  Backbone.sync = function(method, model, options) {
-    var type = methodMap[method];
- 
-    // Default options, unless specified.
-    _.defaults(options || (options = {}), {
-      emulateHTTP: Backbone.emulateHTTP,
-      emulateJSON: Backbone.emulateJSON
-    });
- 
-    // Default JSON-request options.
-    var params = {type: type, dataType: 'json'};
- 
-    // Ensure that we have a URL.
-    if (!options.url) {
-      params.url = _.result(model, 'url') || urlError();
-    }
- 
-    // Ensure that we have the appropriate request data.
-    if (options.data == null && model && (method === 'create' || method === 'update' || method === 'patch')) {
-      params.contentType = 'application/json';
-      params.data = JSON.stringify(options.attrs || model.toJSON(options));
-    }
- 
-    // For older servers, emulate JSON by encoding the request into an HTML-form.
-    if (options.emulateJSON) {
-      params.contentType = 'application/x-www-form-urlencoded';
-      params.data = params.data ? {model: params.data} : {};
-    }
- 
-    // For older servers, emulate HTTP by mimicking the HTTP method with `_method`
-    // And an `X-HTTP-Method-Override` header.
-    if (options.emulateHTTP && (type === 'PUT' || type === 'DELETE' || type === 'PATCH')) {
-      params.type = 'POST';
-      if (options.emulateJSON) params.data._method = type;
-      var beforeSend = options.beforeSend;
-      options.beforeSend = function(xhr) {
-        xhr.setRequestHeader('X-HTTP-Method-Override', type);
-        if (beforeSend) return beforeSend.apply(this, arguments);
-      };
-    }
- 
-    // Don't process data on a non-GET request.
-    if (params.type !== 'GET' && !options.emulateJSON) {
-      params.processData = false;
-    }
- 
-    var success = options.success;
-    options.success = function(resp) {
-      if (success) success(model, resp, options);
-      model.trigger('sync', model, resp, options);
-    };
- 
-    var error = options.error;
-    options.error = function(xhr) {
-      if (error) error(model, xhr, options);
-      model.trigger('error', model, xhr, options);
-    };
- 
-    // Make the request, allowing the user to override any Ajax options.
-    var xhr = options.xhr = Backbone.ajax(_.extend(params, options));
-    model.trigger('request', model, xhr, options);
-    return xhr;
-  };
- 
-  // Set the default implementation of `Backbone.ajax` to proxy through to `$`.
-  Backbone.ajax = function() {
-    return Backbone.$.ajax.apply(Backbone.$, arguments);
-  };
- 
-  // Helpers
-  // -------
- 
-=======
 
   });
 
@@ -2679,18 +1515,13 @@
   // Helpers
   // -------
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
   // Helper function to correctly set up the prototype chain, for subclasses.
   // Similar to `goog.inherits`, but uses a hash of prototype properties and
   // class properties to be extended.
   var extend = function(protoProps, staticProps) {
     var parent = this;
     var child;
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // The constructor function for the new subclass is either defined by you
     // (the "constructor" property in your `extend` definition), or defaulted
     // by us to simply call the parent's constructor.
@@ -2699,39 +1530,15 @@
     } else {
       child = function(){ return parent.apply(this, arguments); };
     }
-<<<<<<< HEAD
- 
-    // Add static properties to the constructor function, if supplied.
-    _.extend(child, parent, staticProps);
- 
-=======
 
     // Add static properties to the constructor function, if supplied.
     _.extend(child, parent, staticProps);
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
     // Set the prototype chain to inherit from `parent`, without calling
     // `parent`'s constructor function.
     var Surrogate = function(){ this.constructor = child; };
     Surrogate.prototype = parent.prototype;
     child.prototype = new Surrogate;
-<<<<<<< HEAD
- 
-    // Add prototype properties (instance properties) to the subclass,
-    // if supplied.
-    if (protoProps) _.extend(child.prototype, protoProps);
- 
-    // Set a convenience property in case the parent's prototype is needed
-    // later.
-    child.__super__ = parent.prototype;
- 
-    return child;
-  };
- 
-  // Set up inheritance for the model, collection, router, view and history.
-  Model.extend = Collection.extend = Router.extend = View.extend = History.extend = extend;
- 
-=======
 
     // Add prototype properties (instance properties) to the subclass,
     // if supplied.
@@ -2747,18 +1554,13 @@
   // Set up inheritance for the model, collection, router, view and history.
   Model.extend = Collection.extend = Router.extend = View.extend = History.extend = extend;
 
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.
   // Throw an error when a URL is needed, and none is supplied.
   var urlError = function() {
     throw new Error('A "url" property or function must be specified');
   };
-<<<<<<< HEAD
- 
-}).call(this);
-=======
 
   // Wrap an optional error callback with a fallback error event.
-  var wrapError = function(model, options) {
+  var wrapError = function (model, options) {
     var error = options.error;
     options.error = function(resp) {
       if (error) error(model, resp, options);
@@ -2767,4 +1569,3 @@
   };
 
 }).call(this);
->>>>>>> major refactor to make this lib more modern, following layoutmanager conventions.

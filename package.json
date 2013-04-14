@@ -29,14 +29,6 @@
     "include": [
       "vertebrae.js"
     ],
-    "main": "vertebrae.js",
-    "shim": {
-      "deps": [
-        "jquery",
-        "backbone",
-        "underscore"
-      ],
-      "exports": "Backbone.Vertebrae"
-    }
+    "main": "vertebrae.js"
   }
 }

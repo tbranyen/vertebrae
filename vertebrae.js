@@ -6,8 +6,10 @@
 (function(window) { 
 "use strict";
 
-// Create a valid definition exports function.
-var define = window.define || function(cb) { cb.call(this, function() {}); };
+// Normalize the `define` and `require` calls.
+var require = window.require || function() {};
+// Call the exports function or the crafted one with the Node.js `require`.
+var define = window.define || function(cb) { cb.call(this, require); };
 
 // Define the module contents.
 define(function(require) {

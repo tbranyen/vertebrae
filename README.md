@@ -1,7 +1,7 @@
 vertebrae
 =========
 
-> Backbone Persistence and jQuery AJAX Management Plugin
+> Backbone transport management.
 
 **v0.1.0-pre** [![Build
 Status](https://travis-ci.org/tbranyen/vertebrae.png?branch=master)](https://travis-ci.org/tbranyen/vertebrae)
